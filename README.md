@@ -1,173 +1,48 @@
 # Order Events Service
 
-Event-driven microservice built with Spring Boot, Kafka, PostgreSQL and Docker Compose.
+Production-oriented event-driven Spring Boot microservice for creating orders, publishing Kafka events, consuming those events idempotently, and documenting the build with OpenAPI, JaCoCo, Docker, and GitHub Pages.
 
-The goal of this project is to demonstrate a production-oriented implementation of an event-driven service, including:
+## What It Demonstrates
 
-- Kafka producer and consumer
-- idempotent event processing
-- retry handling
-- dead letter topic
-- PostgreSQL persistence
-- Flyway database migrations
-- Swagger UI
+- Java 21 and Maven-only build
+- Spring Boot REST API with request validation
+- PostgreSQL persistence through Spring Data JPA
+- Flyway-managed database schema
+- Kafka producer and consumer with JSON events
+- Idempotent consumer processing through a `processed_events` table
+- Retry with fixed backoff and dead-letter routing to `order.created.v1.dlt`
+- Swagger UI and generated OpenAPI JSON
 - Docker Compose local environment
-- GitHub Actions CI
-
----
+- JUnit 5 tests, Mockito, Spring Boot Test, Testcontainers for PostgreSQL
+- JaCoCo coverage report under `target/site/jacoco`
+- GitHub Pages artifact assembled under `target/pages`
 
 ## Architecture
 
-The service exposes a REST API to create orders.
-
-When an order is created:
-
-1. The API receives a `CreateOrderRequest`
-2. The order is persisted in PostgreSQL
-3. An `OrderCreatedEvent` is published to Kafka
-4. A Kafka consumer processes the event
-5. The consumer stores the processed `eventId` to guarantee idempotency
-6. Failed events are retried and eventually sent to a Dead Letter Topic
+The service keeps one focused workflow:
 
 ```text
 Client
-  ↓
-REST API
-  ↓
-Order Service
-  ↓
-PostgreSQL
-  ↓
-Kafka Producer
-  ↓
-order.created.v1
-  ↓
-Kafka Consumer
-  ↓
-Idempotency Check
-  ↓
-Business Processing
-  ↓
-processed_events
+  -> REST API
+  -> Order Service
+  -> PostgreSQL
+  -> Kafka Producer
+  -> order.created.v1
+  -> Kafka Consumer
+  -> processed_events
+  -> order.created.v1.dlt
 ```
 
----
+When a client creates an order, the application persists the order and publishes an `OrderCreatedEvent`. The consumer stores the event ID in `processed_events` after successful processing. If the same Kafka event is delivered again, the consumer sees the existing event ID and exits successfully, allowing the offset to be committed without duplicating side effects.
 
-## Tech Stack
+## Runtime Endpoints
 
-- Java 21
-- Spring Boot
-- Spring Web
-- Spring Data JPA
-- Spring Kafka
-- PostgreSQL
-- Flyway
-- Docker Compose
-- Swagger UI / OpenAPI
-- GitHub Actions
+- REST API: `POST http://localhost:8080/api/orders`
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- OpenAPI JSON while running locally: `http://localhost:8080/v3/api-docs`
+- Actuator health: `http://localhost:8080/actuator/health`
 
----
-
-## Event Design
-
-### Main Topic
-
-```text
-order.created.v1
-```
-
-### Dead Letter Topic
-
-```text
-order.created.v1.dlt
-```
-
-### Example Event
-
-```json
-{
-  "eventId": "0e1c8700-9b2a-4e4c-a9f4-73b8f8a2a111",
-  "eventType": "OrderCreated",
-  "occurredAt": "2026-05-20T10:15:30Z",
-  "orderId": "0a2ff913-41cf-4aa2-8b01-79f7b0cc4d44",
-  "customerId": "customer-001",
-  "amount": 199.90
-}
-```
-
----
-
-## Idempotency Strategy
-
-Kafka consumers can receive the same message more than once.
-
-To avoid duplicated side effects, every event contains a unique `eventId`.
-
-The consumer follows this flow:
-
-1. Check whether `eventId` already exists in `processed_events`
-2. If it exists, skip processing and acknowledge the message
-3. If it does not exist, process the event inside a transaction
-4. Store the `eventId` in `processed_events`
-5. Commit the Kafka offset only after successful processing
-
-This provides at-least-once delivery with idempotent processing.
-
----
-
-## Retry and Dead Letter Topic
-
-Transient failures are retried with backoff.
-
-After the maximum number of retry attempts, the event is sent to:
-
-```text
-order.created.v1.dlt
-```
-
-This avoids message loss and allows failed events to be inspected or replayed manually.
-
----
-
-## Local Development
-
-### Start infrastructure
-
-```bash
-docker compose up -d postgres kafka
-```
-
-### Run application locally
-
-Run the Spring Boot application from IntelliJ IDEA.
-
-### Run everything with Docker Compose
-
-```bash
-docker compose up --build
-```
-
----
-
-## Swagger UI
-
-After starting the application:
-
-```text
-http://localhost:8080/swagger-ui.html
-```
-
----
-
-## Health Check
-
-```text
-http://localhost:8080/actuator/health
-```
-
----
-
-## Example Request
+Example request:
 
 ```http
 POST http://localhost:8080/api/orders
@@ -179,92 +54,100 @@ Content-Type: application/json
 }
 ```
 
----
+## Local Development
 
-## Docker Compose
+Start PostgreSQL and Kafka in Docker, then run the Spring Boot app from the IDE or Maven:
 
-Example services:
+```bash
+docker compose up -d postgres kafka
+./mvnw spring-boot:run
+```
 
-- PostgreSQL
-- Kafka
-- Spring Boot application
+Run the complete local environment:
 
-The entire local environment is reproducible with a single command.
+```bash
+docker compose up --build
+```
 
----
+Useful validation commands:
+
+```bash
+./mvnw clean verify
+docker compose config
+docker build -t order-events-service:local .
+```
+
+## Build Outputs
+
+Generated files are intentionally produced under `target` and should not be committed.
+
+- MapStruct implementations: `target/generated-sources/annotations`
+- JaCoCo coverage report: `target/site/jacoco/index.html`
+- OpenAPI export: `target/generated-docs/openapi.json`
+- GitHub Pages artifact: `target/pages`
+
+The committed landing page source is the only HTML source file:
+
+```text
+src/site/index.html
+```
+
+During `./mvnw clean verify`, Maven copies the landing page and generated reports into `target/pages`.
+
+## GitHub Pages
+
+The CI workflow publishes GitHub Pages from `main` using the official Pages actions. Replace the placeholder repository URL after creating the GitHub repository:
+
+- Pages placeholder: `https://your-username.github.io/order-events-service/`
+- JaCoCo placeholder: `https://your-username.github.io/order-events-service/jacoco/`
+- OpenAPI placeholder: `https://your-username.github.io/order-events-service/openapi/openapi.json`
+
+The Pages landing page also links to local Swagger UI and actuator health. Those links work only while the application is running locally.
+
+## Testing
+
+Run all tests and reports:
+
+```bash
+./mvnw clean verify
+```
+
+The test suite covers:
+
+- Order creation service behavior
+- REST controller validation
+- Kafka producer interaction
+- Kafka consumer idempotency and duplicate handling
+- Retry and DLT configuration wiring
+- MapStruct mapping behavior
+- PostgreSQL repository behavior with Testcontainers
+- Spring application context startup
+- OpenAPI JSON export under `target/generated-docs`
 
 ## CI Pipeline
 
-GitHub Actions executes:
+`.github/workflows/ci.yml` runs on pushes to `main` and pull requests. It:
 
-- Maven build
-- unit tests
-- Docker image build
-
-Workflow location:
-
-```text
-.github/workflows/ci.yml
-```
-
----
+1. Checks out the repository.
+2. Sets up Java 21.
+3. Runs `./mvnw -B clean verify`.
+4. Builds the Docker image.
+5. Uploads test reports.
+6. Publishes `target/pages` to GitHub Pages from `main`.
 
 ## Design Trade-offs
 
-This project intentionally keeps the domain small.
+This project intentionally does not include Kubernetes, multiple services, saga orchestration, or schema registry. The goal is to keep the system small enough to review while still demonstrating important event-driven reliability patterns.
 
-The goal is not to create a distributed system for its own sake, but to demonstrate the hard parts of event-driven architecture:
+The order creation flow publishes to Kafka after flushing the order row. This keeps the portfolio project simple and observable. In a system requiring stronger database-to-Kafka atomicity, the next step would be a transactional outbox and relay.
 
-- duplicate message handling
-- retry behavior
-- dead letter routing
-- transactional boundaries
-- local reproducibility
-- API documentation
-- CI automation
-
-Kafka is used because it better represents event streaming and event-log based architecture than a simple queue-based demo.
-
----
-
-## What This Project Is Not
-
-This is not a full microservice ecosystem.
-
-It does not include:
-
-- service discovery
-- Kubernetes deployment
-- distributed tracing
-- schema registry
-- multi-service orchestration
-- saga orchestration
-
-Those additions would make sense only if the project evolved into multiple services.
-
----
+The consumer uses an idempotency table because Kafka provides at-least-once delivery. The listener lets persistence exceptions propagate so Spring Kafka retry and DLT handling can decide whether to retry or recover the record.
 
 ## Future Improvements
 
 - Transactional outbox pattern
 - Schema Registry with Avro or Protobuf
-- Testcontainers integration tests
-- Prometheus and Grafana
-- OpenTelemetry tracing
-- Kafka topic provisioning script
 - Consumer replay tooling
-
----
-
-## Repository Goals
-
-This repository is intended to demonstrate:
-
-- clean project structure
-- production-oriented engineering practices
-- event-driven architecture fundamentals
-- Docker-based local development
-- resilient Kafka consumer design
-- maintainable Spring Boot architecture
-
-The focus is not on complexity, but on correctness and engineering discipline.
+- OpenTelemetry tracing
+- Prometheus and Grafana dashboards
+- Explicit Kafka topic provisioning for non-local environments

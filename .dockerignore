@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+*.iml
+*.log
+.env
+.env.*
+target
+docker-data
+docker-volumes
+coverage
+generated
+out
+build

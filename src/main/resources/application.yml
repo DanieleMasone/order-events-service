@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: order-events-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/order_events}
+    username: ${SPRING_DATASOURCE_USERNAME:order_events}
+    password: ${SPRING_DATASOURCE_PASSWORD:order_events}
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:29092}
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:order-events-service}
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.github.tuonome.orderevents.domain
+        spring.json.value.default.type: com.github.tuonome.orderevents.domain.OrderCreatedEvent
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: record
+      missing-topics-fatal: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  kafka:
+    topics:
+      order-created: order.created.v1
+      order-created-dlt: order.created.v1.dlt
+    retry:
+      max-attempts: 3
+      backoff-ms: 1000
