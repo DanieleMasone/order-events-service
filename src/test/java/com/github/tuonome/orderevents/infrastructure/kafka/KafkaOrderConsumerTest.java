@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -47,7 +48,7 @@ class KafkaOrderConsumerTest {
         consumer.consume(event);
 
         ArgumentCaptor<ProcessedEventEntity> captor = ArgumentCaptor.forClass(ProcessedEventEntity.class);
-        verify(processedEventRepository).save(captor.capture());
+        verify(processedEventRepository).saveAndFlush(captor.capture());
         assertThat(captor.getValue().getEventId()).isEqualTo(event.eventId());
         assertThat(captor.getValue().getEventType()).isEqualTo("OrderCreated");
         assertThat(captor.getValue().getProcessedAt()).isEqualTo(NOW);
@@ -60,14 +61,37 @@ class KafkaOrderConsumerTest {
 
         consumer.consume(event);
 
-        verify(processedEventRepository, never()).save(any());
+        verify(processedEventRepository, never()).saveAndFlush(any());
+    }
+
+    @Test
+    void treatsConcurrentDuplicateMarkerAsIdempotentSuccess() {
+        OrderCreatedEvent event = event();
+        when(processedEventRepository.existsById(event.eventId())).thenReturn(false, true);
+        when(processedEventRepository.saveAndFlush(any()))
+                .thenThrow(new DataIntegrityViolationException("duplicate event"));
+
+        consumer.consume(event);
+
+        verify(processedEventRepository).saveAndFlush(any());
+    }
+
+    @Test
+    void propagatesUnexpectedIntegrityFailureForKafkaRetry() {
+        OrderCreatedEvent event = event();
+        when(processedEventRepository.existsById(event.eventId())).thenReturn(false, false);
+        when(processedEventRepository.saveAndFlush(any()))
+                .thenThrow(new DataIntegrityViolationException("constraint failure"));
+
+        assertThatThrownBy(() -> consumer.consume(event))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
     void propagatesTransientPersistenceFailureForKafkaRetry() {
         OrderCreatedEvent event = event();
         when(processedEventRepository.existsById(event.eventId())).thenReturn(false);
-        when(processedEventRepository.save(any())).thenThrow(new DataAccessResourceFailureException("database unavailable"));
+        when(processedEventRepository.saveAndFlush(any())).thenThrow(new DataAccessResourceFailureException("database unavailable"));
 
         assertThatThrownBy(() -> consumer.consume(event))
                 .isInstanceOf(DataAccessResourceFailureException.class);

@@ -31,6 +31,9 @@ public class KafkaConfig {
             @Value("${app.kafka.retry.max-attempts}") long retryMaxAttempts,
             @Value("${spring.kafka.listener.auto-startup:true}") boolean listenerAutoStartup
     ) {
+        if (retryMaxAttempts < 1) {
+            throw new IllegalArgumentException("Kafka retry max attempts must be at least 1");
+        }
         this.dltTopic = dltTopic;
         this.retryBackoffMs = retryBackoffMs;
         this.retryMaxAttempts = retryMaxAttempts;

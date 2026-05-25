@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -42,6 +43,11 @@ class OpenApiExportTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString(StandardCharsets.UTF_8);
+
+        assertThat(openApiJson)
+                .contains("\"/api/orders\"")
+                .contains("\"CreateOrderRequest\"")
+                .contains("\"OrderResponse\"");
 
         Path output = Path.of("target", "generated-docs", "openapi.json");
         Files.createDirectories(output.getParent());

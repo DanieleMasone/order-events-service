@@ -12,18 +12,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers(disabledWithoutDocker = true)
 public abstract class PostgresTestSupport {
 
-    private static final String TESTCONTAINERS_ENV_STRATEGY =
-            "org.testcontainers.dockerclient.EnvironmentAndSystemPropertyClientProviderStrategy";
-
-    static {
-        if (System.getProperty("os.name").toLowerCase().contains("win")
-                && System.getProperty("docker.host") == null
-                && System.getenv("DOCKER_HOST") == null) {
-            System.setProperty("docker.client.strategy", TESTCONTAINERS_ENV_STRATEGY);
-            System.setProperty("docker.host", "npipe:////./pipe/dockerDesktopLinuxEngine");
-        }
-    }
-
     @Container
     static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16-alpine");
 

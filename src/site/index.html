@@ -7,36 +7,36 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f7f8fa;
-      --surface: #ffffff;
-      --surface-alt: #eef3f6;
-      --text: #172026;
-      --muted: #5d6973;
-      --line: #d7dde2;
-      --accent: #006c67;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --panel-muted: #eef3f7;
+      --text: #17212b;
+      --muted: #566573;
+      --line: #d7e0e7;
+      --accent: #006d68;
       --accent-strong: #004f4b;
-      --accent-soft: #d9f0ed;
-      --warn: #a75f00;
-      --code: #12212b;
-      --shadow: 0 14px 30px rgba(23, 32, 38, 0.08);
+      --accent-soft: #d9f0ee;
+      --focus: #b45f06;
+      --code-bg: #111820;
+      --code-text: #eef6f8;
       --radius: 8px;
-      --max: 1120px;
+      --max: 1100px;
     }
 
     [data-theme="dark"] {
       color-scheme: dark;
-      --bg: #111417;
-      --surface: #1a2025;
-      --surface-alt: #222a30;
-      --text: #edf2f5;
-      --muted: #aab5bd;
-      --line: #34414a;
-      --accent: #42c8bd;
-      --accent-strong: #76ddd4;
-      --accent-soft: #183f3d;
-      --warn: #f1b45f;
-      --code: #0c1114;
-      --shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+      --bg: #11161b;
+      --panel: #1a2229;
+      --panel-muted: #222d35;
+      --text: #eef4f7;
+      --muted: #a9b6c0;
+      --line: #34434e;
+      --accent: #4ed0c5;
+      --accent-strong: #84e6de;
+      --accent-soft: #173f3c;
+      --focus: #f2b35e;
+      --code-bg: #0c1116;
+      --code-text: #f4fbfc;
     }
 
     * {
@@ -51,14 +51,14 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       line-height: 1.6;
     }
 
     a {
       color: var(--accent);
       text-decoration-thickness: 0.08em;
-      text-underline-offset: 0.2em;
+      text-underline-offset: 0.18em;
     }
 
     a:hover {
@@ -67,20 +67,20 @@
 
     a:focus-visible,
     button:focus-visible {
-      outline: 3px solid var(--warn);
+      outline: 3px solid var(--focus);
       outline-offset: 3px;
     }
 
     .skip-link {
       position: absolute;
       left: 1rem;
-      top: 0.75rem;
+      top: 1rem;
       z-index: 20;
-      transform: translateY(-150%);
-      background: var(--surface);
-      color: var(--text);
+      transform: translateY(-180%);
+      background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
+      color: var(--text);
       padding: 0.6rem 0.8rem;
     }
 
@@ -89,73 +89,66 @@
     }
 
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: color-mix(in srgb, var(--surface) 92%, transparent);
       border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(14px);
+      background: var(--panel);
     }
 
     .nav {
       max-width: var(--max);
       margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.9rem 1rem;
+      padding: 1rem;
+      display: grid;
+      gap: 0.9rem;
     }
 
     .brand {
-      display: inline-flex;
-      flex-direction: column;
-      min-width: max-content;
       color: var(--text);
-      text-decoration: none;
       font-weight: 800;
-      line-height: 1.15;
+      text-decoration: none;
+      line-height: 1.2;
     }
 
     .brand span {
+      display: block;
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.86rem;
       font-weight: 600;
     }
 
     nav ul {
       display: flex;
-      align-items: center;
-      gap: 0.25rem;
+      flex-wrap: wrap;
+      gap: 0.45rem;
       list-style: none;
       margin: 0;
       padding: 0;
-      flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
     nav a,
     .theme-toggle,
     .button {
       border-radius: var(--radius);
-      padding: 0.55rem 0.75rem;
+      font-size: 0.95rem;
       font-weight: 700;
-      font-size: 0.93rem;
+      min-height: 2.5rem;
+      padding: 0.55rem 0.75rem;
     }
 
     nav a {
       color: var(--muted);
+      display: inline-flex;
+      align-items: center;
       text-decoration: none;
     }
 
     nav a:hover {
-      background: var(--surface-alt);
+      background: var(--panel-muted);
       color: var(--text);
     }
 
     .theme-toggle {
+      background: var(--panel);
       border: 1px solid var(--line);
-      background: var(--surface);
       color: var(--text);
       cursor: pointer;
     }
@@ -165,295 +158,199 @@
     }
 
     section {
-      padding: 4rem 1rem;
+      padding: 3.5rem 1rem;
     }
 
-    .section-inner,
-    .hero-inner {
+    section:nth-of-type(even) {
+      background: var(--panel);
+      border-block: 1px solid var(--line);
+    }
+
+    .inner {
       max-width: var(--max);
       margin: 0 auto;
     }
 
     .hero {
-      background:
-        linear-gradient(125deg, color-mix(in srgb, var(--accent-soft) 62%, transparent), transparent 50%),
-        var(--surface);
-      border-bottom: 1px solid var(--line);
-      padding-top: 4.8rem;
-      padding-bottom: 3.4rem;
+      padding-top: 4rem;
     }
 
-    .hero-grid {
+    .hero-grid,
+    .two-column,
+    .cards,
+    .doc-links {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
-      gap: 2rem;
-      align-items: center;
+      gap: 1rem;
+    }
+
+    .hero-panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem;
     }
 
     .eyebrow {
       color: var(--accent-strong);
+      font-size: 0.78rem;
       font-weight: 800;
       letter-spacing: 0;
+      margin: 0 0 0.4rem;
       text-transform: uppercase;
-      font-size: 0.78rem;
     }
 
     h1,
     h2,
     h3 {
       letter-spacing: 0;
-      line-height: 1.12;
+      line-height: 1.15;
       margin: 0;
     }
 
     h1 {
-      font-size: clamp(2.35rem, 3.8rem, 4.25rem);
-      max-width: 11ch;
-      margin-top: 0.45rem;
+      font-size: clamp(2.35rem, 8vw, 4.2rem);
+      max-width: 12ch;
     }
 
     h2 {
-      font-size: 2rem;
-      margin-bottom: 0.8rem;
+      font-size: clamp(1.55rem, 4vw, 2.1rem);
+      margin-bottom: 0.75rem;
     }
 
     h3 {
       font-size: 1.05rem;
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.35rem;
     }
 
     p {
       margin: 0;
     }
 
-    .lead {
+    .lead,
+    .muted {
       color: var(--muted);
-      font-size: 1.12rem;
-      max-width: 66ch;
+    }
+
+    .lead {
+      font-size: 1.1rem;
       margin-top: 1rem;
+      max-width: 67ch;
     }
 
     .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
-      margin-top: 1.5rem;
+      margin-top: 1.4rem;
     }
 
     .button {
-      display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-height: 2.75rem;
+      background: var(--panel);
       border: 1px solid var(--line);
-      background: var(--surface);
       color: var(--text);
+      display: inline-flex;
+      justify-content: center;
       text-decoration: none;
-      box-shadow: none;
     }
 
     .button.primary {
       background: var(--accent);
-      color: #ffffff;
       border-color: var(--accent);
+      color: #ffffff;
     }
 
     [data-theme="dark"] .button.primary {
-      color: #051413;
+      color: #06201e;
     }
 
-    .button:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow);
-    }
-
-    .service-panel {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 1rem;
-    }
-
-    .signal-list {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .signal {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.8rem;
-      align-items: start;
-      background: var(--surface-alt);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.85rem;
-    }
-
-    .signal strong {
-      display: block;
-    }
-
-    .signal span {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .marker {
-      width: 0.72rem;
-      height: 0.72rem;
-      margin-top: 0.45rem;
-      border-radius: 999px;
-      background: var(--accent);
-    }
-
-    .grid {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 1.1rem;
-      min-height: 100%;
-    }
-
-    .card p,
-    .section-copy {
-      color: var(--muted);
-    }
-
-    .band {
-      background: var(--surface);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .flow {
-      display: grid;
-      gap: 0.6rem;
-      margin-top: 1.2rem;
-    }
-
-    .flow-row {
-      display: grid;
-      grid-template-columns: repeat(9, minmax(90px, 1fr));
-      gap: 0.5rem;
-      overflow-x: auto;
-      padding-bottom: 0.25rem;
-    }
-
-    .node {
-      min-height: 4.5rem;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.7rem;
-      font-weight: 800;
-      font-size: 0.9rem;
-    }
-
-    .node.emphasis {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-
-    .steps {
-      counter-reset: step;
+    .summary-list {
       display: grid;
       gap: 0.8rem;
-      margin: 1.2rem 0 0;
+      margin: 0;
       padding: 0;
       list-style: none;
     }
 
-    .steps li {
-      counter-increment: step;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.75rem;
-      align-items: start;
-      background: var(--surface);
+    .summary-list li,
+    .card,
+    .doc-link,
+    .flow-node {
+      background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      padding: 0.95rem;
     }
 
-    .steps li::before {
-      content: counter(step);
-      width: 1.75rem;
-      height: 1.75rem;
+    section:nth-of-type(even) .summary-list li,
+    section:nth-of-type(even) .card,
+    section:nth-of-type(even) .doc-link,
+    section:nth-of-type(even) .flow-node {
+      background: var(--bg);
+    }
+
+    .summary-list li,
+    .card,
+    .doc-link {
+      padding: 1rem;
+    }
+
+    .card p,
+    .doc-link span {
+      color: var(--muted);
+    }
+
+    .architecture-flow {
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 1.2rem;
+      overflow-x: auto;
+      padding-bottom: 0.25rem;
+    }
+
+    .flow-row {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(8.5rem, 1fr));
+      gap: 0.5rem;
+      min-width: 880px;
+    }
+
+    .flow-node {
+      min-height: 4rem;
       display: grid;
       place-items: center;
-      border-radius: 999px;
-      background: var(--accent);
-      color: #ffffff;
+      padding: 0.7rem;
+      text-align: center;
       font-weight: 800;
-      font-size: 0.85rem;
     }
 
-    [data-theme="dark"] .steps li::before {
-      color: #051413;
+    .flow-node.key {
+      background: var(--accent-soft);
+      border-color: var(--accent);
     }
 
-    code,
     pre {
+      background: var(--code-bg);
+      border-radius: var(--radius);
+      color: var(--code-text);
+      overflow-x: auto;
+      padding: 1rem;
+      margin: 1rem 0 0;
+    }
+
+    code {
       font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
     }
 
-    pre {
-      overflow-x: auto;
-      margin: 1rem 0 0;
-      background: var(--code);
-      color: #eef7f6;
-      border-radius: var(--radius);
-      padding: 1rem;
-      border: 1px solid var(--line);
-    }
-
-    .links {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .link-card {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: center;
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 0.9rem;
-      text-decoration: none;
+    .doc-link {
       color: var(--text);
-    }
-
-    .link-card span {
-      color: var(--muted);
-      font-size: 0.9rem;
+      display: grid;
+      gap: 0.2rem;
+      text-decoration: none;
     }
 
     footer {
-      border-top: 1px solid var(--line);
-      padding: 2rem 1rem;
       color: var(--muted);
+      padding: 2rem 1rem;
     }
 
     footer div {
@@ -461,48 +358,34 @@
       margin: 0 auto;
     }
 
-    @media (max-width: 860px) {
+    @media (min-width: 760px) {
       .nav {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      nav ul {
-        justify-content: flex-start;
+        align-items: center;
+        grid-template-columns: 1fr auto;
       }
 
       .hero-grid,
-      .grid.three,
-      .grid.two,
-      .links {
-        grid-template-columns: 1fr;
+      .two-column {
+        grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+        align-items: start;
       }
 
-      h1 {
-        max-width: 100%;
+      .cards,
+      .doc-links {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
       }
     }
 
-    @media (max-width: 560px) {
-      section {
-        padding: 3rem 1rem;
-      }
-
-      .actions,
-      nav ul {
-        width: 100%;
-      }
-
-      nav li,
-      .button {
-        width: 100%;
+    @media (max-width: 520px) {
+      nav ul,
+      .actions {
+        display: grid;
       }
 
       nav a,
-      .theme-toggle {
-        display: block;
+      .theme-toggle,
+      .button {
         width: 100%;
-        text-align: left;
       }
     }
 
@@ -519,16 +402,17 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header>
-    <div class="nav" aria-label="Primary">
-      <a class="brand" href="#main">Order Events Service <span>Spring Boot, Kafka, PostgreSQL</span></a>
-      <nav>
+    <div class="nav">
+      <a class="brand" href="#main">Order Events Service <span>Spring Boot event-driven microservice</span></a>
+      <nav aria-label="Primary navigation">
         <ul>
+          <li><a href="#overview">Overview</a></li>
           <li><a href="#architecture">Architecture</a></li>
-          <li><a href="#local-development">Local Dev</a></li>
-          <li><a href="#generated-links">CI Links</a></li>
+          <li><a href="#docs">Docs</a></li>
           <li><a href="https://github.com/your-username/order-events-service">Repository</a></li>
-          <li><button class="theme-toggle" type="button" id="themeToggle" aria-pressed="false">Dark mode</button></li>
+          <li><button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">Dark mode</button></li>
         </ul>
       </nav>
     </div>
@@ -536,174 +420,150 @@
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-inner hero-grid">
+      <div class="inner hero-grid">
         <div>
-          <p class="eyebrow">Event-driven portfolio service</p>
+          <p class="eyebrow">Portfolio backend project</p>
           <h1 id="hero-title">Order Events Service</h1>
-          <p class="lead">A compact, production-oriented Spring Boot microservice demonstrating REST order creation, PostgreSQL persistence, Kafka publishing and consuming, idempotent processing, retry, DLT routing, OpenAPI, CI, coverage, and Pages documentation.</p>
-          <div class="actions" aria-label="Primary links">
-            <a class="button primary" href="./jacoco/index.html">View coverage</a>
-            <a class="button" href="./openapi/openapi.json">OpenAPI JSON</a>
+          <p class="lead">A focused Spring Boot service that persists orders, publishes Kafka events, consumes them idempotently, and exposes generated API and coverage documentation through GitHub Pages.</p>
+          <div class="actions" aria-label="Primary actions">
+            <a class="button primary" href="./openapi/openapi.json">OpenAPI JSON</a>
+            <a class="button" href="./jacoco/index.html">Coverage report</a>
             <a class="button" href="http://localhost:8080/swagger-ui.html">Local Swagger UI</a>
           </div>
         </div>
-        <aside class="service-panel" aria-label="Service capabilities">
-          <div class="signal-list">
-            <div class="signal"><span class="marker" aria-hidden="true"></span><p><strong>At-least-once event flow</strong><span>Kafka offsets advance only after successful listener processing.</span></p></div>
-            <div class="signal"><span class="marker" aria-hidden="true"></span><p><strong>Idempotent consumer</strong><span>Processed event IDs are stored in PostgreSQL to avoid duplicate side effects.</span></p></div>
-            <div class="signal"><span class="marker" aria-hidden="true"></span><p><strong>Operational visibility</strong><span>Swagger UI, actuator health, JaCoCo, and GitHub Pages are wired into the build.</span></p></div>
-          </div>
+
+        <aside class="hero-panel" aria-label="Build status summary">
+          <ul class="summary-list">
+            <li><strong>Runtime</strong><br><span class="muted">Java 21, Spring Boot, PostgreSQL, Kafka.</span></li>
+            <li><strong>Reliability</strong><br><span class="muted">Idempotent consumer, retry backoff, dead-letter topic.</span></li>
+            <li><strong>Documentation</strong><br><span class="muted">Swagger UI locally, OpenAPI and JaCoCo generated under target.</span></li>
+          </ul>
         </aside>
       </div>
     </section>
 
-    <section aria-labelledby="summary-title">
-      <div class="section-inner">
-        <h2 id="summary-title">Project Summary</h2>
-        <p class="section-copy">The service exposes one focused workflow: create an order, persist it, publish an `OrderCreatedEvent`, consume that event, and record idempotent processing. The architecture stays intentionally small while still showing the reliability concerns that matter in real event-driven systems.</p>
-        <div class="grid three" style="margin-top: 1.2rem;">
-          <article class="card">
-            <h3>API boundary</h3>
-            <p>Validated REST input and stable response DTOs keep the HTTP contract separate from persistence and Kafka payloads.</p>
-          </article>
-          <article class="card">
-            <h3>Event boundary</h3>
-            <p>Kafka producer and consumer code live behind application and infrastructure boundaries with explicit retry behavior.</p>
-          </article>
-          <article class="card">
-            <h3>Data boundary</h3>
-            <p>Flyway owns schema creation, JPA persists orders, and a dedicated table tracks processed event identifiers.</p>
-          </article>
+    <section id="overview" aria-labelledby="overview-title">
+      <div class="inner two-column">
+        <div>
+          <h2 id="overview-title">System Overview</h2>
+          <p class="muted">The service exposes one business workflow: create an order, persist it, publish an `OrderCreatedEvent`, consume that event, and record the processed event ID. The project intentionally avoids distributed-system extras that would obscure the core reliability patterns.</p>
+        </div>
+        <div class="cards">
+          <article class="card"><h3>REST API</h3><p>Validates create-order requests and returns a stable response contract.</p></article>
+          <article class="card"><h3>PostgreSQL</h3><p>Stores orders and the consumer idempotency table managed by Flyway.</p></article>
+          <article class="card"><h3>Kafka</h3><p>Publishes and consumes `order.created.v1` events with DLT recovery.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="band" id="architecture" aria-labelledby="architecture-title">
-      <div class="section-inner">
+    <section id="architecture" aria-labelledby="architecture-title">
+      <div class="inner">
         <h2 id="architecture-title">Architecture</h2>
-        <p class="section-copy">The runtime flow is deliberately direct so the transactional and messaging responsibilities are easy to inspect.</p>
-        <div class="flow" role="img" aria-label="Client to REST API to Order Service to PostgreSQL to Kafka Producer to Kafka Topic to Kafka Consumer to Idempotency Store to DLT">
+        <p class="muted">The diagram shows the runtime path and where reliability controls live.</p>
+        <div class="architecture-flow" role="img" aria-label="Client to REST API to order service to PostgreSQL and Kafka producer, then topic to consumer, idempotency store, business processing, and dead-letter topic">
           <div class="flow-row">
-            <div class="node">Client</div>
-            <div class="node">REST API</div>
-            <div class="node">Order Service</div>
-            <div class="node emphasis">PostgreSQL</div>
-            <div class="node">Kafka Producer</div>
-            <div class="node emphasis">order.created.v1</div>
-            <div class="node">Kafka Consumer</div>
-            <div class="node emphasis">processed_events</div>
-            <div class="node">order.created.v1.dlt</div>
+            <div class="flow-node">Client</div>
+            <div class="flow-node">REST API</div>
+            <div class="flow-node">Order Service</div>
+            <div class="flow-node key">PostgreSQL</div>
+            <div class="flow-node">Kafka Producer</div>
+            <div class="flow-node key">order.created.v1</div>
+            <div class="flow-node">Kafka Consumer</div>
+            <div class="flow-node key">processed_events</div>
+            <div class="flow-node">order.created.v1.dlt</div>
           </div>
         </div>
       </div>
     </section>
 
-    <section aria-labelledby="stack-title">
-      <div class="section-inner">
-        <h2 id="stack-title">Tech Stack</h2>
-        <div class="grid three">
-          <article class="card"><h3>Runtime</h3><p>Java 21, Spring Boot, Spring Web, Spring Data JPA, Spring Kafka, PostgreSQL, Flyway.</p></article>
-          <article class="card"><h3>Contracts</h3><p>OpenAPI via springdoc, Swagger UI while the app is running, MapStruct for DTO/domain/entity/event mapping.</p></article>
-          <article class="card"><h3>Delivery</h3><p>Maven, Docker Compose, GitHub Actions, JaCoCo, and GitHub Pages artifacts generated under `target`.</p></article>
+    <section aria-labelledby="quality-title">
+      <div class="inner">
+        <h2 id="quality-title">Quality and Reliability</h2>
+        <div class="cards">
+          <article class="card"><h3>Idempotency</h3><p>Each event has an `eventId`. The consumer records processed IDs and treats duplicate markers as successful no-ops.</p></article>
+          <article class="card"><h3>Retry and DLT</h3><p>Transient listener failures propagate to Spring Kafka retry and then to `order.created.v1.dlt` after attempts are exhausted.</p></article>
+          <article class="card"><h3>Build gates</h3><p>Maven verification runs tests, exports OpenAPI, generates JaCoCo, and assembles the Pages artifact.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="runtime-flow-title">
-      <div class="section-inner">
-        <h2 id="runtime-flow-title">Runtime Flow</h2>
-        <ol class="steps">
-          <li><p>The client posts a validated create-order request to `/api/orders`.</p></li>
-          <li><p>The service creates the order, persists it through JPA, and flushes the row to PostgreSQL.</p></li>
-          <li><p>The producer publishes `OrderCreatedEvent` to `order.created.v1` using the event ID as the Kafka key.</p></li>
-          <li><p>The consumer receives the event, checks `processed_events`, records the event ID, and returns successfully.</p></li>
-          <li><p>Spring Kafka commits the offset only after the listener completes without an exception.</p></li>
-        </ol>
-      </div>
-    </section>
-
-    <section aria-labelledby="reliability-title">
-      <div class="section-inner">
-        <h2 id="reliability-title">Idempotency, Retry, and DLT</h2>
-        <div class="grid two">
-          <article class="card">
-            <h3>Idempotency strategy</h3>
-            <p>Each event carries a unique `eventId`. The consumer skips events already present in `processed_events`, which makes duplicate Kafka deliveries safe for this workflow.</p>
-          </article>
-          <article class="card">
-            <h3>Retry and DLT strategy</h3>
-            <p>Transient listener failures are retried with fixed backoff. Exhausted records are published to `order.created.v1.dlt` for inspection or manual replay.</p>
-          </article>
+    <section id="local-development" aria-labelledby="local-title">
+      <div class="inner two-column">
+        <div>
+          <h2 id="local-title">Local Development</h2>
+          <p class="muted">Run infrastructure in Docker and the app from Maven or an IDE, or let Docker Compose build and run the full stack.</p>
         </div>
-      </div>
-    </section>
+        <div>
+          <pre><code>docker compose up -d postgres kafka
+./mvnw spring-boot:run
 
-    <section class="band" id="local-development" aria-labelledby="local-title">
-      <div class="section-inner">
-        <h2 id="local-title">Local Development Commands</h2>
-        <div class="grid two">
-          <article class="card">
-            <h3>Infrastructure only</h3>
-            <pre><code>docker compose up -d postgres kafka
-./mvnw spring-boot:run</code></pre>
-          </article>
-          <article class="card">
-            <h3>Full stack</h3>
-            <pre><code>docker compose up --build
+docker compose up --build
 ./mvnw clean verify</code></pre>
-          </article>
         </div>
       </div>
     </section>
 
-    <section id="generated-links" aria-labelledby="links-title">
-      <div class="section-inner">
-        <h2 id="links-title">Links Generated by CI</h2>
-        <p class="section-copy">The live Swagger UI link works when the service is running locally. The relative documentation links are copied into the GitHub Pages artifact during Maven verification.</p>
-        <div class="links">
-          <a class="link-card" href="./jacoco/index.html"><strong>JaCoCo report</strong><span>target/site/jacoco</span></a>
-          <a class="link-card" href="./openapi/openapi.json"><strong>OpenAPI spec</strong><span>target/generated-docs</span></a>
-          <a class="link-card" href="http://localhost:8080/swagger-ui.html"><strong>Local Swagger UI</strong><span>app required</span></a>
-          <a class="link-card" href="http://localhost:8080/actuator/health"><strong>Actuator health</strong><span>app required</span></a>
-          <a class="link-card" href="https://github.com/your-username/order-events-service#readme"><strong>README</strong><span>repository guide</span></a>
-          <a class="link-card" href="#architecture"><strong>Architecture anchor</strong><span>runtime view</span></a>
+    <section id="docs" aria-labelledby="docs-title">
+      <div class="inner">
+        <h2 id="docs-title">Generated Documentation</h2>
+        <p class="muted">Relative links are published by GitHub Pages. Swagger UI and actuator health are local-only links that work when the local app is running.</p>
+        <div class="doc-links">
+          <a class="doc-link" href="./openapi/openapi.json"><strong>OpenAPI JSON</strong><span>Generated at `target/generated-docs/openapi.json` and copied to Pages.</span></a>
+          <a class="doc-link" href="./jacoco/index.html"><strong>JaCoCo report</strong><span>Generated at `target/site/jacoco/index.html` and copied to Pages.</span></a>
+          <a class="doc-link" href="http://localhost:8080/swagger-ui.html"><strong>Local Swagger UI</strong><span>Available at `/swagger-ui.html` when the local app is running.</span></a>
+          <a class="doc-link" href="http://localhost:8080/actuator/health"><strong>Local health</strong><span>Available at `/actuator/health` when the local app is running.</span></a>
+          <a class="doc-link" href="https://github.com/your-username/order-events-service#readme"><strong>README</strong><span>Repository setup, design notes, and architecture diagram.</span></a>
+          <a class="doc-link" href="https://github.com/your-username/order-events-service"><strong>Repository</strong><span>Placeholder GitHub repository URL.</span></a>
         </div>
       </div>
     </section>
 
-    <section class="band" aria-labelledby="quality-title">
-      <div class="section-inner">
-        <h2 id="quality-title">Quality Gates</h2>
-        <div class="grid three">
-          <article class="card"><h3>Build</h3><p>`./mvnw clean verify` compiles Java 21, runs tests, generates JaCoCo, exports OpenAPI, and assembles Pages output.</p></article>
-          <article class="card"><h3>Containers</h3><p>`docker compose config` validates local orchestration and `docker build` verifies the deployable image.</p></article>
-          <article class="card"><h3>CI</h3><p>GitHub Actions runs Maven verification, builds the Docker image, uploads test reports, and deploys Pages from `main`.</p></article>
+    <section aria-labelledby="cicd-title">
+      <div class="inner">
+        <h2 id="cicd-title">CI/CD</h2>
+        <div class="cards">
+          <article class="card"><h3>Pull requests</h3><p>Run `./mvnw clean verify`, generate reports, and build the Docker image.</p></article>
+          <article class="card"><h3>Main branch</h3><p>Uploads `target/pages` with the official GitHub Pages actions and deploys it.</p></article>
+          <article class="card"><h3>Repository hygiene</h3><p>Build output, generated sources, reports, local logs, and Docker temp files stay untracked.</p></article>
         </div>
       </div>
     </section>
 
     <section aria-labelledby="future-title">
-      <div class="section-inner">
+      <div class="inner">
         <h2 id="future-title">Future Improvements</h2>
-        <div class="grid three">
-          <article class="card"><h3>Transactional outbox</h3><p>Move broker publication behind an outbox relay when stronger database-to-Kafka consistency is required.</p></article>
-          <article class="card"><h3>Schema governance</h3><p>Add schema registry and Avro or Protobuf after the event contract needs independent version governance.</p></article>
-          <article class="card"><h3>Observability</h3><p>Add tracing, metrics dashboards, and replay tooling when operating multiple services or consumers.</p></article>
+        <div class="cards">
+          <article class="card"><h3>Transactional outbox</h3><p>Add only if database-to-Kafka consistency becomes the main design focus.</p></article>
+          <article class="card"><h3>Schema governance</h3><p>Add schema registry after event contracts need independent compatibility management.</p></article>
+          <article class="card"><h3>Observability</h3><p>Add tracing and metrics dashboards when operational visibility becomes a project goal.</p></article>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div>Order Events Service. Built as a compact reference for event-driven Spring Boot reliability patterns.</div>
+    <div>Generated documentation is produced by Maven under `target` and published from `target/pages`.</div>
   </footer>
 
   <script>
     const storageKey = "order-events-theme";
     const button = document.getElementById("themeToggle");
-    const preferred = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    const saved = localStorage.getItem(storageKey);
-    const initialTheme = saved || preferred;
+
+    function getStoredTheme() {
+      try {
+        return window.localStorage.getItem(storageKey);
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function storeTheme(theme) {
+      try {
+        window.localStorage.setItem(storageKey, theme);
+      } catch (error) {
+        return;
+      }
+    }
 
     function applyTheme(theme) {
       document.documentElement.dataset.theme = theme;
@@ -712,12 +572,13 @@
       button.textContent = dark ? "Light mode" : "Dark mode";
     }
 
-    applyTheme(initialTheme);
+    const preferredTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    applyTheme(getStoredTheme() || preferredTheme);
 
     button.addEventListener("click", () => {
-      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-      localStorage.setItem(storageKey, next);
-      applyTheme(next);
+      const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      storeTheme(nextTheme);
+      applyTheme(nextTheme);
     });
   </script>
 </body>

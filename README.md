@@ -19,19 +19,28 @@ Production-oriented event-driven Spring Boot microservice for creating orders, p
 
 ## Architecture
 
-The service keeps one focused workflow:
+The service keeps one focused workflow.
 
-```text
-Client
-  -> REST API
-  -> Order Service
-  -> PostgreSQL
-  -> Kafka Producer
-  -> order.created.v1
-  -> Kafka Consumer
-  -> processed_events
-  -> order.created.v1.dlt
+```mermaid
+flowchart LR
+    Client[Client / API Consumer] --> Api[REST API]
+    Api --> Service[Order Service]
+    Service --> Db[(PostgreSQL)]
+    Service --> Producer[Kafka Producer]
+    Producer --> Topic[[order.created.v1]]
+    Topic --> Consumer[Kafka Consumer]
+    Consumer --> Idempotency[(processed_events)]
+    Consumer --> Processing[Business Processing]
+    Consumer -. failures after retries .-> Dlt[[order.created.v1.dlt]]
 ```
+
+Responsibilities:
+
+- REST API validates create-order requests and returns the persisted order contract.
+- PostgreSQL stores orders and the `processed_events` idempotency markers.
+- Kafka topic `order.created.v1` carries `OrderCreatedEvent` messages keyed by event ID.
+- Kafka consumer records processed event IDs so duplicate deliveries are acknowledged without duplicate side effects.
+- Retry and DLT handling are delegated to Spring Kafka; exhausted records are published to `order.created.v1.dlt`.
 
 When a client creates an order, the application persists the order and publishes an `OrderCreatedEvent`. The consumer stores the event ID in `processed_events` after successful processing. If the same Kafka event is delivered again, the consumer sees the existing event ID and exits successfully, allowing the offset to be committed without duplicating side effects.
 
@@ -92,7 +101,7 @@ The committed landing page source is the only HTML source file:
 src/site/index.html
 ```
 
-During `./mvnw clean verify`, Maven copies the landing page and generated reports into `target/pages`.
+During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `target/generated-docs/openapi.json`. Maven then copies the landing page, JaCoCo report, and OpenAPI JSON into `target/pages`. The build fails if the OpenAPI JSON is missing, so the Pages link cannot silently point to a non-existent file.
 
 ## GitHub Pages
 
@@ -123,6 +132,9 @@ The test suite covers:
 - PostgreSQL repository behavior with Testcontainers
 - Spring application context startup
 - OpenAPI JSON export under `target/generated-docs`
+- Landing page source links for generated documentation
+
+Arquillian is intentionally not used. It is valuable for Java EE/Jakarta EE container-managed integration tests, but this service is a Spring Boot application. Spring Boot Test, MockMvc, Mockito, and Testcontainers exercise the relevant runtime boundaries with less configuration and less conceptual overhead.
 
 ## CI Pipeline
 

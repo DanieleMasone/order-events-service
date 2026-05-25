@@ -15,7 +15,6 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +28,7 @@ class KafkaOrderProducerTest {
     void publishesEventUsingEventIdAsKafkaKey() {
         OrderCreatedEvent event = event();
         when(kafkaTemplate.send("order.created.v1", event.eventId().toString(), event))
-                .thenReturn(CompletableFuture.completedFuture(mock(SendResult.class)));
+                .thenReturn(CompletableFuture.completedFuture(sendResult()));
 
         new KafkaOrderProducer(kafkaTemplate, "order.created.v1").publish(event);
 
@@ -59,5 +58,10 @@ class KafkaOrderProducerTest {
                 "customer-001",
                 new BigDecimal("199.90")
         );
+    }
+
+    @SuppressWarnings("unchecked")
+    private static SendResult<String, OrderCreatedEvent> sendResult() {
+        return mock(SendResult.class);
     }
 }

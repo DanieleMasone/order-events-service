@@ -8,6 +8,7 @@ import org.springframework.kafka.listener.CommonErrorHandler;
 import org.springframework.kafka.listener.ContainerProperties;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 
 class KafkaConfigTest {
@@ -17,7 +18,7 @@ class KafkaConfigTest {
         KafkaConfig config = new KafkaConfig("order.created.v1.dlt", 1000, 3, false);
         CommonErrorHandler errorHandler = mock(CommonErrorHandler.class);
 
-        var factory = config.kafkaListenerContainerFactory(mock(ConsumerFactory.class), errorHandler);
+        var factory = config.kafkaListenerContainerFactory(consumerFactory(), errorHandler);
 
         assertThat(factory.getContainerProperties().getAckMode()).isEqualTo(ContainerProperties.AckMode.RECORD);
     }
@@ -26,8 +27,25 @@ class KafkaConfigTest {
     void createsRetryAndDeadLetterErrorHandler() {
         KafkaConfig config = new KafkaConfig("order.created.v1.dlt", 1000, 3, true);
 
-        CommonErrorHandler handler = config.orderKafkaErrorHandler(mock(KafkaTemplate.class));
+        CommonErrorHandler handler = config.orderKafkaErrorHandler(kafkaTemplate());
 
         assertThat(handler).isNotNull();
+    }
+
+    @Test
+    void rejectsInvalidRetryConfiguration() {
+        assertThatThrownBy(() -> new KafkaConfig("order.created.v1.dlt", 1000, 0, true))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("max attempts");
+    }
+
+    @SuppressWarnings("unchecked")
+    private static ConsumerFactory<String, OrderCreatedEvent> consumerFactory() {
+        return mock(ConsumerFactory.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate() {
+        return mock(KafkaTemplate.class);
     }
 }
