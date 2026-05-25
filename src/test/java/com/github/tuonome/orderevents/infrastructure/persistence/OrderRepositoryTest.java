@@ -2,10 +2,12 @@ package com.github.tuonome.orderevents.infrastructure.persistence;
 
 import com.github.tuonome.orderevents.PostgresTestSupport;
 import com.github.tuonome.orderevents.domain.OrderStatus;
+import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
@@ -24,6 +26,9 @@ class OrderRepositoryTest extends PostgresTestSupport {
 
     @Autowired
     private ProcessedEventRepository processedEventRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     void persistsOrderRowsInPostgres() {
@@ -47,9 +52,10 @@ class OrderRepositoryTest extends PostgresTestSupport {
     void enforcesUniqueProcessedEventIds() {
         UUID eventId = UUID.randomUUID();
         processedEventRepository.saveAndFlush(new ProcessedEventEntity(eventId, "OrderCreated", Instant.now()));
+        entityManager.clear();
 
-        assertThatThrownBy(() -> processedEventRepository.saveAndFlush(
+        assertThatThrownBy(() -> entityManager.persistAndFlush(
                 new ProcessedEventEntity(eventId, "OrderCreated", Instant.now())
-        )).isInstanceOf(DataIntegrityViolationException.class);
+        )).isInstanceOfAny(DataIntegrityViolationException.class, PersistenceException.class);
     }
 }
