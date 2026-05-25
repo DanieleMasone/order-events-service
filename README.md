@@ -105,7 +105,7 @@ During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `t
 
 ## GitHub Pages
 
-The CI workflow publishes GitHub Pages from `main` using the official Pages actions. Replace the placeholder repository URL after creating the GitHub repository:
+The CI workflow publishes GitHub Pages from `main` using the official Pages actions. In repository settings, set Pages source to **GitHub Actions** before expecting deployments to appear. Replace the placeholder repository URL after creating the GitHub repository:
 
 - Pages placeholder: `https://your-username.github.io/order-events-service/`
 - JaCoCo placeholder: `https://your-username.github.io/order-events-service/jacoco/`
@@ -143,9 +143,11 @@ Arquillian is intentionally not used. It is valuable for Java EE/Jakarta EE cont
 1. Checks out the repository.
 2. Sets up Java 21.
 3. Runs `./mvnw -B clean verify`.
-4. Builds the Docker image.
-5. Uploads test reports.
-6. Publishes `target/pages` to GitHub Pages from `main`.
+4. Verifies the generated Pages, JaCoCo, and OpenAPI files exist.
+5. Validates Docker Compose.
+6. Builds the Docker image.
+7. Uploads test reports.
+8. Uploads and deploys `target/pages` to GitHub Pages only from `main`.
 
 ## Design Trade-offs
 

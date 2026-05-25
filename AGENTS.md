@@ -88,6 +88,18 @@ Expected Maven outputs after `./mvnw clean verify`:
 
 The only committed HTML source file should be `src/site/index.html`.
 
+## CI/CD And GitHub Pages
+
+The workflow must stay explicit and small: run `./mvnw clean verify`, verify generated documentation files, validate Docker Compose, build the Docker image, and upload the Pages artifact only from `main`.
+
+GitHub Pages must use the official GitHub Pages actions:
+
+- `actions/configure-pages`
+- `actions/upload-pages-artifact`
+- `actions/deploy-pages`
+
+Do not use third-party Pages deployment actions unless there is a clear, documented reason. The repository Pages source must be set to **GitHub Actions** in GitHub settings. Pull requests must build and validate the Pages artifact locally under `target/pages`, but must not upload or deploy it.
+
 ## Testing Strategy
 
 Prefer behavior-focused tests over broad brittle coverage. The suite should cover:
