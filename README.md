@@ -157,11 +157,8 @@ The order creation flow publishes to Kafka after flushing the order row. This ke
 
 The consumer uses an idempotency table because Kafka provides at-least-once delivery. The listener lets persistence exceptions propagate so Spring Kafka retry and DLT handling can decide whether to retry or recover the record.
 
-## Future Improvements
+## License
 
-- Transactional outbox pattern
-- Schema Registry with Avro or Protobuf
-- Consumer replay tooling
-- OpenTelemetry tracing
-- Prometheus and Grafana dashboards
-- Explicit Kafka topic provisioning for non-local environments
+Released under the MIT License. See [LICENSE](LICENSE).
+
+Copyright (c) 2026 Daniele Masone.
