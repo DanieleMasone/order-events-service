@@ -108,10 +108,10 @@ During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `t
 
 The CI workflow publishes GitHub Pages from `main` using the official Pages actions. In repository settings, set Pages source to **GitHub Actions** before expecting deployments to appear. Replace the placeholder repository URL after creating the GitHub repository:
 
-- Pages placeholder: `https://your-username.github.io/order-events-service/`
-- JaCoCo placeholder: `https://your-username.github.io/order-events-service/jacoco/`
-- OpenAPI documentation placeholder: `https://your-username.github.io/order-events-service/openapi/`
-- OpenAPI JSON placeholder: `https://your-username.github.io/order-events-service/openapi/openapi.json`
+- **Pages:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service)
+- **JaCoCo:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/jacoco/)
+- **OpenAPI documentation:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/openapi/)
+- **OpenAPI JSON:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/openapi/openapi.json)
 
 Local Swagger UI remains available for development when the Spring Boot app is running, but GitHub Pages links to the generated static `/openapi/` documentation.
 
