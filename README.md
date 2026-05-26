@@ -106,7 +106,7 @@ During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `t
 
 ## GitHub Pages
 
-The CI workflow publishes GitHub Pages from `main` using the official Pages actions. In repository settings, set Pages source to **GitHub Actions** before expecting deployments to appear. Replace the placeholder repository URL after creating the GitHub repository:
+The CI workflow publishes GitHub Pages from `main` using the official Pages actions. In repository settings, set Pages source to **GitHub Actions** before expecting deployments to appear:
 
 - **Pages:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service)
 - **JaCoCo:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/jacoco/)
