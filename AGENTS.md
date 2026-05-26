@@ -80,13 +80,16 @@ All generated files must stay under `target`.
 Expected Maven outputs after `./mvnw clean verify`:
 
 - JaCoCo report: `target/site/jacoco/index.html`
-- OpenAPI export: `target/generated-docs/openapi.json`
+- OpenAPI export: `target/generated-docs/openapi/openapi.json`
+- Static OpenAPI documentation: `target/generated-docs/openapi/index.html`
 - GitHub Pages artifact: `target/pages`
 - Published landing page copy: `target/pages/index.html`
 - Published coverage copy: `target/pages/jacoco/index.html`
+- Published OpenAPI documentation: `target/pages/openapi/index.html`
 - Published OpenAPI copy: `target/pages/openapi/openapi.json`
 
 The only committed HTML source file should be `src/site/index.html`.
+Do not handwrite OpenAPI HTML pages; generate them from the OpenAPI specification with Maven.
 
 ## CI/CD And GitHub Pages
 
@@ -112,7 +115,7 @@ Prefer behavior-focused tests over broad brittle coverage. The suite should cove
 - retry and DLT configuration
 - repository persistence with Testcontainers when Docker is available
 - application context startup
-- OpenAPI export generation
+- OpenAPI export and static documentation generation
 - landing page documentation links
 
 Do not add Arquillian unless there is a clear Java EE/Jakarta EE container-managed testing requirement. This is a Spring Boot service, so Spring Boot Test, MockMvc, Mockito, and Testcontainers are the appropriate default tools.
@@ -166,16 +169,23 @@ http://localhost:8080/v3/api-docs
 The build exports OpenAPI JSON through a Spring MockMvc test to:
 
 ```text
-target/generated-docs/openapi.json
+target/generated-docs/openapi/openapi.json
 ```
 
-Maven copies that file to:
+Maven generates static OpenAPI documentation from that JSON to:
 
 ```text
+target/generated-docs/openapi/index.html
+```
+
+Maven copies both files to:
+
+```text
+target/pages/openapi/index.html
 target/pages/openapi/openapi.json
 ```
 
-Do not commit generated OpenAPI output.
+The landing page must link to `./openapi/` for API documentation and `./openapi/openapi.json` for the raw spec. Do not commit generated OpenAPI output, and do not add Node or frontend build tooling for docs unless there is a clear technical reason.
 
 ## Kafka, Idempotency, Retry
 

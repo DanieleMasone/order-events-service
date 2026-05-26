@@ -11,7 +11,7 @@ Production-oriented event-driven Spring Boot microservice for creating orders, p
 - Kafka producer and consumer with JSON events
 - Idempotent consumer processing through a `processed_events` table
 - Retry with fixed backoff and dead-letter routing to `order.created.v1.dlt`
-- Swagger UI and generated OpenAPI JSON
+- Runtime OpenAPI support and generated static OpenAPI documentation
 - Docker Compose local environment
 - JUnit 5 tests, Mockito, Spring Boot Test, Testcontainers for PostgreSQL
 - JaCoCo coverage report under `target/site/jacoco`
@@ -47,8 +47,8 @@ When a client creates an order, the application persists the order and publishes
 ## Runtime Endpoints
 
 - REST API: `POST http://localhost:8080/api/orders`
-- Swagger UI: `http://localhost:8080/swagger-ui.html`
 - OpenAPI JSON while running locally: `http://localhost:8080/v3/api-docs`
+- Swagger UI for local development: `http://localhost:8080/swagger-ui.html`
 - Actuator health: `http://localhost:8080/actuator/health`
 
 Example request:
@@ -92,7 +92,8 @@ Generated files are intentionally produced under `target` and should not be comm
 
 - MapStruct implementations: `target/generated-sources/annotations`
 - JaCoCo coverage report: `target/site/jacoco/index.html`
-- OpenAPI export: `target/generated-docs/openapi.json`
+- OpenAPI export: `target/generated-docs/openapi/openapi.json`
+- Static OpenAPI documentation: `target/generated-docs/openapi/index.html`
 - GitHub Pages artifact: `target/pages`
 
 The committed landing page source is the only HTML source file:
@@ -101,7 +102,7 @@ The committed landing page source is the only HTML source file:
 src/site/index.html
 ```
 
-During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `target/generated-docs/openapi.json`. Maven then copies the landing page, JaCoCo report, and OpenAPI JSON into `target/pages`. The build fails if the OpenAPI JSON is missing, so the Pages link cannot silently point to a non-existent file.
+During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `target/generated-docs/openapi/openapi.json`. The OpenAPI Generator Maven plugin renders static `html2` documentation from that JSON into `target/generated-docs/openapi/index.html`. Maven then copies the landing page, JaCoCo report, generated API documentation, and raw OpenAPI JSON into `target/pages`. The build fails if any published documentation file is missing, so Pages cannot silently deploy broken links.
 
 ## GitHub Pages
 
@@ -109,9 +110,10 @@ The CI workflow publishes GitHub Pages from `main` using the official Pages acti
 
 - Pages placeholder: `https://your-username.github.io/order-events-service/`
 - JaCoCo placeholder: `https://your-username.github.io/order-events-service/jacoco/`
-- OpenAPI placeholder: `https://your-username.github.io/order-events-service/openapi/openapi.json`
+- OpenAPI documentation placeholder: `https://your-username.github.io/order-events-service/openapi/`
+- OpenAPI JSON placeholder: `https://your-username.github.io/order-events-service/openapi/openapi.json`
 
-The Pages landing page also links to local Swagger UI and actuator health. Those links work only while the application is running locally.
+Local Swagger UI remains available for development when the Spring Boot app is running, but GitHub Pages links to the generated static `/openapi/` documentation.
 
 ## Testing
 
@@ -131,7 +133,7 @@ The test suite covers:
 - MapStruct mapping behavior
 - PostgreSQL repository behavior with Testcontainers
 - Spring application context startup
-- OpenAPI JSON export under `target/generated-docs`
+- OpenAPI JSON export and static documentation generation under `target/generated-docs/openapi`
 - Landing page source links for generated documentation
 
 Arquillian is intentionally not used. It is valuable for Java EE/Jakarta EE container-managed integration tests, but this service is a Spring Boot application. Spring Boot Test, MockMvc, Mockito, and Testcontainers exercise the relevant runtime boundaries with less configuration and less conceptual overhead.
@@ -143,7 +145,7 @@ Arquillian is intentionally not used. It is valuable for Java EE/Jakarta EE cont
 1. Checks out the repository.
 2. Sets up Java 21.
 3. Runs `./mvnw -B clean verify`.
-4. Verifies the generated Pages, JaCoCo, and OpenAPI files exist.
+4. Verifies the generated Pages, JaCoCo, OpenAPI JSON, and static OpenAPI documentation files exist.
 5. Validates Docker Compose.
 6. Builds the Docker image.
 7. Uploads test reports.

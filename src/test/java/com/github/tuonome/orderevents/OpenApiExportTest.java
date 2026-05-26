@@ -37,7 +37,7 @@ class OpenApiExportTest {
     private ProcessedEventRepository processedEventRepository;
 
     @Test
-    void exportsOpenApiJsonUnderTarget() throws Exception {
+    void exportsOpenApiJsonUnderGeneratedOpenApiDirectory() throws Exception {
         String openApiJson = mockMvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -49,7 +49,7 @@ class OpenApiExportTest {
                 .contains("\"CreateOrderRequest\"")
                 .contains("\"OrderResponse\"");
 
-        Path output = Path.of("target", "generated-docs", "openapi.json");
+        Path output = Path.of("target", "generated-docs", "openapi", "openapi.json");
         Files.createDirectories(output.getParent());
         Files.writeString(output, openApiJson, StandardCharsets.UTF_8);
     }

@@ -37,7 +37,9 @@ jobs:
             "target/pages/index.html"
             "target/site/jacoco/index.html"
             "target/pages/jacoco/index.html"
-            "target/generated-docs/openapi.json"
+            "target/generated-docs/openapi/index.html"
+            "target/generated-docs/openapi/openapi.json"
+            "target/pages/openapi/index.html"
             "target/pages/openapi/openapi.json"
           )
 

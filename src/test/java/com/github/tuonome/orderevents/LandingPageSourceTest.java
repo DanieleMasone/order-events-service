@@ -15,11 +15,13 @@ class LandingPageSourceTest {
 
         assertThat(html)
                 .contains("href=\"./jacoco/index.html\"")
+                .contains("href=\"./openapi/\"")
                 .contains("href=\"./openapi/openapi.json\"")
-                .contains("href=\"http://localhost:8080/swagger-ui.html\"")
                 .contains("href=\"http://localhost:8080/actuator/health\"")
-                .contains("local app is running")
+                .contains("API documentation is generated from the OpenAPI JSON")
                 .contains("localStorage")
                 .contains("prefers-reduced-motion");
+
+        assertThat(html).doesNotContain("href=\"http://localhost:8080/swagger-ui.html\"");
     }
 }
