@@ -1,5 +1,13 @@
 # Order Events Service
 
+[![CI](https://github.com/danielemasone/order-events-service/actions/workflows/ci.yml/badge.svg)](https://github.com/danielemasone/order-events-service/actions/workflows/ci.yml)
+![Java](https://img.shields.io/badge/Java-21-000?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-6DB33F?logo=springboot)
+![Kafka](https://img.shields.io/badge/Kafka-Event_Driven-231F20?logo=apachekafka)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker)
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-Documentation-222222?logo=githubpages)](https://danielemasone.github.io/order-events-service/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Production-oriented event-driven Spring Boot microservice for creating orders, publishing Kafka events, consuming those events idempotently, and documenting the build with OpenAPI, JaCoCo, Docker, and GitHub Pages.
 
 ## What It Demonstrates
@@ -108,10 +116,10 @@ During `./mvnw clean verify`, a Spring MockMvc test exports `/v3/api-docs` to `t
 
 The CI workflow publishes GitHub Pages from `main` using the official Pages actions. In repository settings, set Pages source to **GitHub Actions** before expecting deployments to appear:
 
-- **Pages:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service)
-- **JaCoCo:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/jacoco/)
-- **OpenAPI documentation:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/openapi/)
-- **OpenAPI JSON:** [danielemasone.github.io/order-events-service](https://danielemasone.github.io/order-events-service/openapi/openapi.json)
+- **Landing page:** https://danielemasone.github.io/order-events-service/
+- **JaCoCo coverage:** https://danielemasone.github.io/order-events-service/jacoco/
+- **OpenAPI documentation:** https://danielemasone.github.io/order-events-service/openapi/
+- **OpenAPI JSON:** https://danielemasone.github.io/order-events-service/openapi/openapi.json
 
 Local Swagger UI remains available for development when the Spring Boot app is running, but GitHub Pages links to the generated static `/openapi/` documentation.
 
