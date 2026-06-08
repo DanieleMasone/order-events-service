@@ -167,6 +167,11 @@ The order creation flow publishes to Kafka after flushing the order row. This ke
 
 The consumer uses an idempotency table because Kafka provides at-least-once delivery. The listener lets persistence exceptions propagate so Spring Kafka retry and DLT handling can decide whether to retry or recover the record.
 
+The Docker image build intentionally skips test execution because the CI pipeline already validates the application through `./mvnw clean verify`.
+
+This keeps verification and packaging concerns separated while avoiding duplicate test execution during image creation.
+
+
 ## License
 
 Released under the MIT License. See [LICENSE](LICENSE).
