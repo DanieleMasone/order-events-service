@@ -45,6 +45,8 @@ class OpenApiExportTest {
                 .getContentAsString(StandardCharsets.UTF_8);
 
         assertThat(openApiJson)
+                .contains("\"http://localhost:8080\"")
+                .contains("\"application/json\"")
                 .contains("\"/api/orders\"")
                 .contains("\"CreateOrderRequest\"")
                 .contains("\"OrderResponse\"");

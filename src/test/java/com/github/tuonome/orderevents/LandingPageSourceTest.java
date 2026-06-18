@@ -14,14 +14,16 @@ class LandingPageSourceTest {
         String html = Files.readString(Path.of("src", "site", "index.html"));
 
         assertThat(html)
+                .contains("href=\"./docs/user-guide.md\"")
                 .contains("href=\"./jacoco/index.html\"")
                 .contains("href=\"./openapi/\"")
                 .contains("href=\"./openapi/openapi.json\"")
-                .contains("href=\"http://localhost:8080/actuator/health\"")
-                .contains("API documentation is generated from the OpenAPI JSON")
+                .contains("https://github.com/danielemasone/order-events-service")
+                .contains("Operational commands, API examples, event flow, and troubleshooting")
                 .contains("localStorage")
                 .contains("prefers-reduced-motion");
 
         assertThat(html).doesNotContain("href=\"http://localhost:8080/swagger-ui.html\"");
+        assertThat(html).doesNotContain("href=\"http://localhost:8080/actuator/health\"");
     }
 }

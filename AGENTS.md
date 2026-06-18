@@ -84,12 +84,14 @@ Expected Maven outputs after `./mvnw clean verify`:
 - Static OpenAPI documentation: `target/generated-docs/openapi/index.html`
 - GitHub Pages artifact: `target/pages`
 - Published landing page copy: `target/pages/index.html`
+- Published user guide copy: `target/pages/docs/user-guide.md`
 - Published coverage copy: `target/pages/jacoco/index.html`
 - Published OpenAPI documentation: `target/pages/openapi/index.html`
 - Published OpenAPI copy: `target/pages/openapi/openapi.json`
 
 The only committed HTML source file should be `src/site/index.html`.
 Do not handwrite OpenAPI HTML pages; generate them from the OpenAPI specification with Maven.
+Keep README as the project entry point and `docs/user-guide.md` as the only operational documentation file. Do not add more markdown docs unless there is a clear, documented reason.
 
 ## CI/CD And GitHub Pages
 
@@ -201,6 +203,7 @@ Do not commit offsets before successful processing. Listener acknowledgment mode
 - Keep Maven as the only build tool.
 - Keep generated output under `target`.
 - Update README and the landing page when documentation links or generated artifact paths change.
+- Update `docs/user-guide.md` when operational commands, runtime endpoints, or generated documentation paths change.
 - Validate with `./mvnw clean verify`, `docker compose config`, and Docker image build when relevant.
 - Check `git status --short` before finishing.
 

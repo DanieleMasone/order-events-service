@@ -421,7 +421,8 @@
           <li><a href="#overview">Overview</a></li>
           <li><a href="#architecture">Architecture</a></li>
           <li><a href="#docs">Docs</a></li>
-          <li><a href="https://github.com/your-username/order-events-service">Repository</a></li>
+          <li><a href="./docs/user-guide.md">Guide</a></li>
+          <li><a href="https://github.com/danielemasone/order-events-service">Repository</a></li>
           <li><button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">Dark mode</button></li>
         </ul>
       </nav>
@@ -436,8 +437,8 @@
           <h1 id="hero-title">Order Events Service</h1>
           <p class="lead">A focused Spring Boot service that persists orders, publishes Kafka events, consumes them idempotently, and exposes generated API and coverage documentation through GitHub Pages.</p>
           <div class="actions" aria-label="Primary actions">
-            <a class="button primary" href="./openapi/">API documentation</a>
-            <a class="button" href="./openapi/openapi.json">OpenAPI JSON</a>
+            <a class="button primary" href="./docs/user-guide.md">User guide</a>
+            <a class="button" href="./openapi/">API documentation</a>
             <a class="button" href="./jacoco/index.html">Coverage report</a>
           </div>
         </div>
@@ -446,7 +447,7 @@
           <ul class="summary-list">
             <li><strong>Runtime</strong><br><span class="muted">Java 21, Spring Boot, PostgreSQL, Kafka.</span></li>
             <li><strong>Reliability</strong><br><span class="muted">Idempotent consumer, retry backoff, dead-letter topic.</span></li>
-            <li><strong>Documentation</strong><br><span class="muted">Static API docs, OpenAPI JSON, and JaCoCo generated under target.</span></li>
+            <li><strong>Documentation</strong><br><span class="muted">User guide, static API docs, OpenAPI JSON, and JaCoCo report.</span></li>
           </ul>
         </aside>
       </div>
@@ -497,33 +498,17 @@
       </div>
     </section>
 
-    <section id="local-development" aria-labelledby="local-title">
-      <div class="inner two-column">
-        <div>
-          <h2 id="local-title">Local Development</h2>
-          <p class="muted">Run infrastructure in Docker and the app from Maven or an IDE, or let Docker Compose build and run the full stack.</p>
-        </div>
-        <div>
-          <pre><code>docker compose up -d postgres kafka
-./mvnw spring-boot:run
-
-docker compose up --build
-./mvnw clean verify</code></pre>
-        </div>
-      </div>
-    </section>
-
     <section id="docs" aria-labelledby="docs-title">
       <div class="inner">
-        <h2 id="docs-title">Generated Documentation</h2>
-        <p class="muted">Relative links are published by GitHub Pages. API documentation is generated from the OpenAPI JSON during the Maven build. The health endpoint is a local-only link that works when the app is running.</p>
+        <h2 id="docs-title">Documentation</h2>
+        <p class="muted">GitHub Pages publishes the operational guide, generated API documentation, raw OpenAPI spec, and coverage report from Maven output under <code>target/pages</code>.</p>
         <div class="doc-links">
-          <a class="doc-link" href="./openapi/"><strong>API documentation</strong><span>Static OpenAPI HTML generated under <code>target/generated-docs/openapi</code>.</span></a>
+          <a class="doc-link" href="./docs/user-guide.md"><strong>User guide</strong><span>Operational commands, API examples, event flow, and troubleshooting.</span></a>
+          <a class="doc-link" href="./openapi/"><strong>API documentation</strong><span>Static OpenAPI HTML generated from the exported spec.</span></a>
           <a class="doc-link" href="./openapi/openapi.json"><strong>OpenAPI JSON</strong><span>Raw specification published with the generated documentation.</span></a>
           <a class="doc-link" href="./jacoco/index.html"><strong>JaCoCo report</strong><span>Coverage report generated at <code>target/site/jacoco/index.html</code>.</span></a>
-          <a class="doc-link" href="http://localhost:8080/actuator/health"><strong>Local health</strong><span>Available at <code>/actuator/health</code> when the local app is running.</span></a>
-          <a class="doc-link" href="https://github.com/your-username/order-events-service#readme"><strong>README</strong><span>Repository setup, design notes, and architecture diagram.</span></a>
-          <a class="doc-link" href="https://github.com/your-username/order-events-service"><strong>Repository</strong><span>Placeholder GitHub repository URL.</span></a>
+          <a class="doc-link" href="https://github.com/danielemasone/order-events-service#readme"><strong>README</strong><span>Project entry point, architecture, and design trade-offs.</span></a>
+          <a class="doc-link" href="https://github.com/danielemasone/order-events-service"><strong>Repository</strong><span>Source code and GitHub Actions workflow.</span></a>
         </div>
       </div>
     </section>
@@ -532,8 +517,8 @@ docker compose up --build
       <div class="inner">
         <h2 id="cicd-title">CI/CD</h2>
         <div class="cards">
-          <article class="card"><h3>Pull requests</h3><p>Run `./mvnw clean verify`, generate reports, and build the Docker image.</p></article>
-          <article class="card"><h3>Main branch</h3><p>Uploads `target/pages` with the official GitHub Pages actions and deploys it.</p></article>
+          <article class="card"><h3>Pull requests</h3><p>Run <code>./mvnw clean verify</code>, generate reports, and build the Docker image.</p></article>
+          <article class="card"><h3>Main branch</h3><p>Uploads <code>target/pages</code> with the official GitHub Pages actions and deploys it.</p></article>
           <article class="card"><h3>Repository hygiene</h3><p>Build output, generated sources, reports, local logs, and Docker temp files stay untracked.</p></article>
         </div>
       </div>

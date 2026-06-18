@@ -200,6 +200,9 @@
                             <target>
                                 <mkdir dir="${project.build.directory}/pages"/>
                                 <copy file="${project.basedir}/src/site/index.html" todir="${project.build.directory}/pages"/>
+                                <mkdir dir="${project.build.directory}/pages/docs"/>
+                                <copy file="${project.basedir}/docs/user-guide.md"
+                                      todir="${project.build.directory}/pages/docs"/>
                                 <mkdir dir="${project.build.directory}/pages/jacoco"/>
                                 <copy todir="${project.build.directory}/pages/jacoco">
                                     <fileset dir="${project.build.directory}/site/jacoco" erroronmissingdir="false"/>

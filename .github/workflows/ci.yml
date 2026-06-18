@@ -35,6 +35,7 @@ jobs:
         run: |
           required_files=(
             "target/pages/index.html"
+            "target/pages/docs/user-guide.md"
             "target/site/jacoco/index.html"
             "target/pages/jacoco/index.html"
             "target/generated-docs/openapi/index.html"
