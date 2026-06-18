@@ -20,10 +20,13 @@ class LandingPageSourceTest {
                 .contains("href=\"./openapi/openapi.json\"")
                 .contains("https://github.com/danielemasone/order-events-service")
                 .contains("Operational commands, API examples, event flow, and troubleshooting")
+                .contains("Intentional Scope")
+                .contains("Deliberate exclusions")
                 .contains("localStorage")
                 .contains("prefers-reduced-motion");
 
         assertThat(html).doesNotContain("href=\"http://localhost:8080/swagger-ui.html\"");
         assertThat(html).doesNotContain("href=\"http://localhost:8080/actuator/health\"");
+        assertThat(html).doesNotContain("Future Improvements");
     }
 }

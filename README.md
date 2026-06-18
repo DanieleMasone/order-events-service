@@ -82,9 +82,9 @@ Run the main validation gate:
 
 ## Design Trade-offs
 
-This project intentionally does not include Kubernetes, multiple services, saga orchestration, or schema registry. The goal is to keep the system small enough to review while still demonstrating event-driven reliability patterns.
+This project intentionally does not include transactional outbox, schema registry, distributed tracing, Kubernetes orchestration, saga orchestration, or additional microservices. These concerns would add value only in a larger distributed system with stronger consistency, compatibility, or operational requirements.
 
-The order creation flow publishes to Kafka after flushing the order row. A transactional outbox would be the next step if database-to-Kafka atomicity became the explicit focus.
+The order creation flow publishes to Kafka after flushing the order row. That trade-off keeps the project focused on Kafka producer/consumer interaction, idempotent consumption, retry handling, DLT routing, and generated documentation rather than platform architecture.
 
 The consumer uses an idempotency table because Kafka provides at-least-once delivery. Listener failures propagate to Spring Kafka so retry and DLT handling remain centralized.
 

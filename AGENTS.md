@@ -17,7 +17,7 @@ Runtime flow:
 5. `processed_events` records processed event IDs so duplicate deliveries become successful no-ops.
 6. Spring Kafka retries transient failures and publishes exhausted records to `order.created.v1.dlt`.
 
-The current design intentionally does not implement a transactional outbox. Add one only if database-to-Kafka atomicity becomes the explicit focus.
+The current design intentionally does not implement a transactional outbox. Treat that as a deliberate scope boundary, not a missing feature.
 
 ## Tech Stack
 
@@ -210,10 +210,13 @@ Do not commit offsets before successful processing. Listener acknowledgment mode
 ## Do Not Add Without Clear Justification
 
 - Arquillian
+- transactional outbox
 - Kubernetes
 - extra microservices
 - saga orchestration
 - schema registry
+- Avro or Protobuf schemas
+- distributed tracing or metrics dashboard stacks
 - frontend frameworks
 - generated artifacts outside `target`
 - committed build outputs or IDE files
