@@ -14,17 +14,18 @@ class LandingPageSourceTest {
         String html = Files.readString(Path.of("src", "site", "index.html"));
 
         assertThat(html)
-                .contains("href=\"./docs/user-guide.md\"")
+                .contains("href=\"./docs/\"")
                 .contains("href=\"./jacoco/index.html\"")
                 .contains("href=\"./openapi/\"")
                 .contains("href=\"./openapi/openapi.json\"")
                 .contains("https://github.com/danielemasone/order-events-service")
-                .contains("Operational commands, API examples, event flow, and troubleshooting")
+                .contains("HTML guide generated from <code>docs/user-guide.md</code>")
                 .contains("Intentional Scope")
                 .contains("Deliberate exclusions")
                 .contains("localStorage")
                 .contains("prefers-reduced-motion");
 
+        assertThat(html).doesNotContain("href=\"./docs/user-guide.md\"");
         assertThat(html).doesNotContain("href=\"http://localhost:8080/swagger-ui.html\"");
         assertThat(html).doesNotContain("href=\"http://localhost:8080/actuator/health\"");
         assertThat(html).doesNotContain("Future Improvements");

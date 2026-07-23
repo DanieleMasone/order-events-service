@@ -421,7 +421,7 @@
           <li><a href="#overview">Overview</a></li>
           <li><a href="#architecture">Architecture</a></li>
           <li><a href="#docs">Docs</a></li>
-          <li><a href="./docs/user-guide.md">Guide</a></li>
+          <li><a href="./docs/">Guide</a></li>
           <li><a href="https://github.com/danielemasone/order-events-service">Repository</a></li>
           <li><button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">Dark mode</button></li>
         </ul>
@@ -437,7 +437,7 @@
           <h1 id="hero-title">Order Events Service</h1>
           <p class="lead">A focused Spring Boot service that persists orders, publishes Kafka events, consumes them idempotently, and exposes generated API and coverage documentation through GitHub Pages.</p>
           <div class="actions" aria-label="Primary actions">
-            <a class="button primary" href="./docs/user-guide.md">User guide</a>
+            <a class="button primary" href="./docs/">User guide</a>
             <a class="button" href="./openapi/">API documentation</a>
             <a class="button" href="./jacoco/index.html">Coverage report</a>
           </div>
@@ -501,9 +501,9 @@
     <section id="docs" aria-labelledby="docs-title">
       <div class="inner">
         <h2 id="docs-title">Documentation</h2>
-        <p class="muted">GitHub Pages publishes the operational guide, generated API documentation, raw OpenAPI spec, and coverage report from Maven output under <code>target/pages</code>.</p>
+        <p class="muted">GitHub Pages publishes the generated user guide, generated API documentation, raw OpenAPI spec, and coverage report from Maven output under <code>target/pages</code>.</p>
         <div class="doc-links">
-          <a class="doc-link" href="./docs/user-guide.md"><strong>User guide</strong><span>Operational commands, API examples, event flow, and troubleshooting.</span></a>
+          <a class="doc-link" href="./docs/"><strong>User guide</strong><span>HTML guide generated from <code>docs/user-guide.md</code> during Maven verification.</span></a>
           <a class="doc-link" href="./openapi/"><strong>API documentation</strong><span>Static OpenAPI HTML generated from the exported spec.</span></a>
           <a class="doc-link" href="./openapi/openapi.json"><strong>OpenAPI JSON</strong><span>Raw specification published with the generated documentation.</span></a>
           <a class="doc-link" href="./jacoco/index.html"><strong>JaCoCo report</strong><span>Coverage report generated at <code>target/site/jacoco/index.html</code>.</span></a>

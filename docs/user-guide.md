@@ -7,7 +7,7 @@
 - Docker Compose
 - Maven Wrapper from this repository
 
-## Running Locally
+## Local Development
 
 ### Infrastructure Only
 
@@ -98,21 +98,22 @@ All generated outputs stay under `target` and are not committed.
 - JaCoCo report: `target/site/jacoco/index.html`
 - OpenAPI JSON: `target/generated-docs/openapi/openapi.json`
 - Static OpenAPI documentation: `target/generated-docs/openapi/index.html`
+- Static user guide documentation: `target/generated-docs/user-guide/index.html`
 - GitHub Pages artifact: `target/pages`
 - Published landing page copy: `target/pages/index.html`
-- Published user guide copy: `target/pages/docs/user-guide.md`
+- Published user guide copy: `target/pages/docs/index.html`
 - Published coverage copy: `target/pages/jacoco/index.html`
 - Published OpenAPI documentation: `target/pages/openapi/index.html`
 - Published OpenAPI JSON: `target/pages/openapi/openapi.json`
 
-The OpenAPI JSON is exported by a Spring MockMvc test during `./mvnw clean verify`. The OpenAPI Generator Maven plugin renders static `html2` documentation from that JSON. Maven then copies the landing page, user guide, JaCoCo report, OpenAPI HTML, and OpenAPI JSON into `target/pages`.
+The OpenAPI JSON is exported by a Spring MockMvc test during `./mvnw clean verify`. The OpenAPI Generator Maven plugin renders static `html2` documentation from that JSON. The user guide HTML is generated from this Markdown source during the Maven test phase. Maven then copies the landing page, generated user guide, JaCoCo report, OpenAPI HTML, and OpenAPI JSON into `target/pages`.
 
 ## GitHub Pages
 
 Published URLs:
 
 - Landing page: `https://danielemasone.github.io/order-events-service/`
-- User guide: `https://danielemasone.github.io/order-events-service/docs/user-guide.md`
+- User guide: `https://danielemasone.github.io/order-events-service/docs/`
 - Coverage: `https://danielemasone.github.io/order-events-service/jacoco/`
 - OpenAPI docs: `https://danielemasone.github.io/order-events-service/openapi/`
 - OpenAPI JSON: `https://danielemasone.github.io/order-events-service/openapi/openapi.json`
@@ -179,7 +180,7 @@ If `target/pages` is missing published files, verify these paths after Maven fin
 
 ```text
 target/pages/index.html
-target/pages/docs/user-guide.md
+target/pages/docs/index.html
 target/pages/jacoco/index.html
 target/pages/openapi/index.html
 target/pages/openapi/openapi.json

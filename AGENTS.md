@@ -82,16 +82,17 @@ Expected Maven outputs after `./mvnw clean verify`:
 - JaCoCo report: `target/site/jacoco/index.html`
 - OpenAPI export: `target/generated-docs/openapi/openapi.json`
 - Static OpenAPI documentation: `target/generated-docs/openapi/index.html`
+- Static user guide documentation: `target/generated-docs/user-guide/index.html`
 - GitHub Pages artifact: `target/pages`
 - Published landing page copy: `target/pages/index.html`
-- Published user guide copy: `target/pages/docs/user-guide.md`
+- Published user guide copy: `target/pages/docs/index.html`
 - Published coverage copy: `target/pages/jacoco/index.html`
 - Published OpenAPI documentation: `target/pages/openapi/index.html`
 - Published OpenAPI copy: `target/pages/openapi/openapi.json`
 
 The only committed HTML source file should be `src/site/index.html`.
 Do not handwrite OpenAPI HTML pages; generate them from the OpenAPI specification with Maven.
-Keep README as the project entry point and `docs/user-guide.md` as the only operational documentation file. Do not add more markdown docs unless there is a clear, documented reason.
+Keep README as the project entry point and `docs/user-guide.md` as the only operational documentation source. Maven must generate the published user guide HTML under `target`; do not handwrite or commit generated guide HTML. Do not add more markdown docs unless there is a clear, documented reason.
 
 ## CI/CD And GitHub Pages
 
@@ -189,6 +190,23 @@ target/pages/openapi/openapi.json
 
 The landing page must link to `./openapi/` for API documentation and `./openapi/openapi.json` for the raw spec. Do not commit generated OpenAPI output, and do not add Node or frontend build tooling for docs unless there is a clear technical reason.
 
+## User Guide
+
+The committed user guide source is:
+
+```text
+docs/user-guide.md
+```
+
+Maven renders it to:
+
+```text
+target/generated-docs/user-guide/index.html
+target/pages/docs/index.html
+```
+
+The landing page and README must point users to `/docs/` for the generated HTML guide. Markdown is the source of truth, not the published Pages format.
+
 ## Kafka, Idempotency, Retry
 
 The service assumes Kafka at-least-once delivery. Consumer idempotency is enforced through the `processed_events` table.
@@ -204,6 +222,7 @@ Do not commit offsets before successful processing. Listener acknowledgment mode
 - Keep generated output under `target`.
 - Update README and the landing page when documentation links or generated artifact paths change.
 - Update `docs/user-guide.md` when operational commands, runtime endpoints, or generated documentation paths change.
+- Keep the generated user guide aligned with the landing page visual system and accessibility expectations.
 - Validate with `./mvnw clean verify`, `docker compose config`, and Docker image build when relevant.
 - Check `git status --short` before finishing.
 

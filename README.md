@@ -10,7 +10,7 @@
 
 Production-oriented Spring Boot microservice for creating orders, publishing Kafka events, consuming them idempotently, and publishing generated OpenAPI and JaCoCo documentation through GitHub Pages.
 
-For local operation, API examples, generated documentation paths, and troubleshooting, see the [User Guide](docs/user-guide.md).
+For local operation, API examples, generated documentation paths, and troubleshooting, see the published [User Guide](https://danielemasone.github.io/order-events-service/docs/).
 
 ## What It Demonstrates
 
@@ -48,12 +48,12 @@ The REST API validates create-order requests and delegates to the order service.
 GitHub Pages is published from the CI-generated `target/pages` artifact:
 
 - [Landing page](https://danielemasone.github.io/order-events-service/)
-- [User guide](https://danielemasone.github.io/order-events-service/docs/user-guide.md)
+- [User guide](https://danielemasone.github.io/order-events-service/docs/)
 - [JaCoCo coverage](https://danielemasone.github.io/order-events-service/jacoco/)
 - [OpenAPI documentation](https://danielemasone.github.io/order-events-service/openapi/)
 - [OpenAPI JSON](https://danielemasone.github.io/order-events-service/openapi/openapi.json)
 
-The repository Pages source must be set to **GitHub Actions**.
+The repository Pages source must be set to **GitHub Actions**. Maven builds the Pages artifact under `target/pages`; generated documentation is not committed.
 
 ## Quick Start
 
@@ -91,7 +91,6 @@ The consumer uses an idempotency table because Kafka provides at-least-once deli
 The Docker image build intentionally skips test execution because the CI pipeline already validates the application through `./mvnw clean verify`.
 
 This keeps verification and packaging concerns separated while avoiding duplicate test execution during image creation.
-
 
 ## License
 
