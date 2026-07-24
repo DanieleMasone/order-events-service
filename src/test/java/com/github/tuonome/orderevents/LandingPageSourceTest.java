@@ -18,11 +18,17 @@ class LandingPageSourceTest {
                 .contains("href=\"./jacoco/index.html\"")
                 .contains("href=\"./openapi/\"")
                 .contains("href=\"./openapi/openapi.json\"")
+                .contains("href=\"./assets/site.css\"")
+                .contains("src=\"./assets/site.js\"")
                 .contains("https://github.com/danielemasone/order-events-service")
                 .contains("HTML guide generated from <code>docs/user-guide.md</code>")
                 .contains("Intentional Scope")
                 .contains("Deliberate exclusions")
-                .contains("localStorage")
+                .contains("Atomic idempotency claim");
+
+        assertThat(Files.readString(Path.of("src", "site", "assets", "site.js")))
+                .contains("localStorage");
+        assertThat(Files.readString(Path.of("src", "site", "assets", "site.css")))
                 .contains("prefers-reduced-motion");
 
         assertThat(html).doesNotContain("href=\"./docs/user-guide.md\"");

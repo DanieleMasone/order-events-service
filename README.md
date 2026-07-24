@@ -15,7 +15,7 @@ For local operation, API examples, generated documentation paths, and troublesho
 ## What It Demonstrates
 
 - Java 21 and Maven-only build
-- Spring Boot REST API with request validation
+- Spring Boot REST API with request validation and Problem Details errors
 - PostgreSQL persistence through Spring Data JPA
 - Flyway-managed database schema
 - Kafka producer and consumer with JSON events
@@ -37,11 +37,10 @@ flowchart LR
     Producer --> Topic[[order.created.v1]]
     Topic --> Consumer[Kafka Consumer]
     Consumer --> Idempotency[(processed_events)]
-    Consumer --> Processing[Business Processing]
     Consumer -. failures after retries .-> Dlt[[order.created.v1.dlt]]
 ```
 
-The REST API validates create-order requests and delegates to the order service. PostgreSQL stores orders and idempotency markers. Kafka carries `OrderCreatedEvent` messages on `order.created.v1`. The consumer records processed event IDs so duplicate deliveries become successful no-ops, while Spring Kafka centralizes retry and dead-letter routing to `order.created.v1.dlt`.
+The REST API validates create-order requests and delegates to the order service. PostgreSQL stores orders and idempotency markers. Kafka carries `OrderCreatedEvent` messages on `order.created.v1`. The consumer atomically inserts each event ID with `ON CONFLICT DO NOTHING`, so duplicate deliveries become successful no-ops while Spring Kafka centralizes retry and dead-letter routing to `order.created.v1.dlt`.
 
 ## GitHub Pages
 
@@ -86,7 +85,7 @@ This project intentionally does not include transactional outbox, schema registr
 
 The order creation flow publishes to Kafka after flushing the order row. That trade-off keeps the project focused on Kafka producer/consumer interaction, idempotent consumption, retry handling, DLT routing, and generated documentation rather than platform architecture.
 
-The consumer uses an idempotency table because Kafka provides at-least-once delivery. Listener failures propagate to Spring Kafka so retry and DLT handling remain centralized.
+The consumer uses an atomic insert into its idempotency table because Kafka provides at-least-once delivery. Listener failures propagate to Spring Kafka so retry and DLT handling remain centralized. The project does not claim exactly-once delivery.
 
 The Docker image build intentionally skips test execution because the CI pipeline already validates the application through `./mvnw clean verify`.
 

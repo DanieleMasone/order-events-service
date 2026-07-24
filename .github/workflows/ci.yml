@@ -35,6 +35,8 @@ jobs:
         run: |
           required_files=(
             "target/pages/index.html"
+            "target/pages/assets/site.css"
+            "target/pages/assets/site.js"
             "target/generated-docs/user-guide/index.html"
             "target/pages/docs/index.html"
             "target/site/jacoco/index.html"
@@ -59,13 +61,12 @@ jobs:
         run: docker build -t order-events-service:ci .
 
       - name: Upload test reports
-        if: always()
+        if: failure()
         uses: actions/upload-artifact@v7
         with:
           name: test-reports
           path: |
             target/surefire-reports
-            target/failsafe-reports
           if-no-files-found: ignore
           retention-days: 7
 

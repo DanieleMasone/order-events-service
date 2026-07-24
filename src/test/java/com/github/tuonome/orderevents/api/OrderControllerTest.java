@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
@@ -52,7 +53,7 @@ class OrderControllerTest {
                                 }
                                 """))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", "/api/orders/" + orderId))
+                .andExpect(header().doesNotExist("Location"))
                 .andExpect(jsonPath("$.id").value(orderId.toString()))
                 .andExpect(jsonPath("$.customerId").value("customer-001"))
                 .andExpect(jsonPath("$.status").value("CREATED"));
@@ -66,6 +67,33 @@ class OrderControllerTest {
                                 {
                                   "customerId": "",
                                   "amount": 0
+                                }
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("$.status").value(400));
+
+        verifyNoInteractions(orderService);
+    }
+
+    @Test
+    void rejectsValuesThatExceedPersistenceConstraints() throws Exception {
+        mockMvc.perform(post("/api/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "customerId": "%s",
+                                  "amount": 199.90
+                                }
+                                """.formatted("x".repeat(121))))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(post("/api/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "customerId": "customer-001",
+                                  "amount": 199.999
                                 }
                                 """))
                 .andExpect(status().isBadRequest());

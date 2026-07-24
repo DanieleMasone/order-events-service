@@ -14,7 +14,7 @@ Runtime flow:
 2. `OrderService` persists the order.
 3. `KafkaOrderProducer` publishes an `OrderCreatedEvent` to `order.created.v1`.
 4. `KafkaOrderConsumer` consumes the event.
-5. `processed_events` records processed event IDs so duplicate deliveries become successful no-ops.
+5. `processed_events` atomically claims event IDs with `ON CONFLICT DO NOTHING` so duplicate deliveries become successful no-ops.
 6. Spring Kafka retries transient failures and publishes exhausted records to `order.created.v1.dlt`.
 
 The current design intentionally does not implement a transactional outbox. Treat that as a deliberate scope boundary, not a missing feature.
@@ -85,12 +85,13 @@ Expected Maven outputs after `./mvnw clean verify`:
 - Static user guide documentation: `target/generated-docs/user-guide/index.html`
 - GitHub Pages artifact: `target/pages`
 - Published landing page copy: `target/pages/index.html`
+- Published shared CSS and script: `target/pages/assets/site.css` and `target/pages/assets/site.js`
 - Published user guide copy: `target/pages/docs/index.html`
 - Published coverage copy: `target/pages/jacoco/index.html`
 - Published OpenAPI documentation: `target/pages/openapi/index.html`
 - Published OpenAPI copy: `target/pages/openapi/openapi.json`
 
-The only committed HTML source file should be `src/site/index.html`.
+The only committed HTML source file should be `src/site/index.html`. Shared CSS and theme behavior belong in `src/site/assets` so the landing page and generated user guide stay aligned.
 Do not handwrite OpenAPI HTML pages; generate them from the OpenAPI specification with Maven.
 Keep README as the project entry point and `docs/user-guide.md` as the only operational documentation source. Maven must generate the published user guide HTML under `target`; do not handwrite or commit generated guide HTML. Do not add more markdown docs unless there is a clear, documented reason.
 
@@ -209,9 +210,9 @@ The landing page and README must point users to `/docs/` for the generated HTML 
 
 ## Kafka, Idempotency, Retry
 
-The service assumes Kafka at-least-once delivery. Consumer idempotency is enforced through the `processed_events` table.
+The service assumes Kafka at-least-once delivery. Consumer idempotency is enforced through an atomic PostgreSQL insert into the `processed_events` table; do not replace it with a check-then-insert sequence.
 
-Duplicates must be treated as successful no-ops so the listener can acknowledge the record. Transient processing failures should propagate to Spring Kafka so retry and DLT handling remain centralized in `KafkaConfig`.
+Duplicates must be treated as successful no-ops so the listener can acknowledge the record. Persistence failures should propagate to Spring Kafka so retry and DLT handling remain centralized in `KafkaConfig`. Do not describe this design as exactly-once delivery.
 
 Do not commit offsets before successful processing. Listener acknowledgment mode should continue to reflect that requirement.
 

@@ -9,14 +9,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.URI;
 
 /**
  * REST entry point for clients that create orders and trigger the event-driven flow.
@@ -33,19 +33,22 @@ public class OrderController {
     }
 
     /**
-     * Accepts a validated order creation command and returns the persisted resource location.
+     * Accepts a validated order creation command and returns the persisted representation.
+     * No Location header is emitted because this focused API does not expose an order retrieval endpoint.
      *
      * @param request incoming order command
-     * @return created order with Location header
+     * @return created order
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Create an order", description = "Persists an order and publishes an OrderCreatedEvent to Kafka.")
     @ApiResponse(responseCode = "201", description = "Order created",
             content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
                     schema = @Schema(implementation = OrderResponse.class)))
-    @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
+    @ApiResponse(responseCode = "400", description = "Invalid request",
+            content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+                    schema = @Schema(implementation = ProblemDetail.class)))
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         OrderResponse response = orderService.createOrder(request);
-        return ResponseEntity.created(URI.create("/api/orders/" + response.id())).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

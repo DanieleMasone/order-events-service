@@ -20,22 +20,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class UserGuideHtmlExportTest {
 
     private static final Path USER_GUIDE_SOURCE = Path.of("docs", "user-guide.md");
-    private static final Path LANDING_PAGE_SOURCE = Path.of("src", "site", "index.html");
     private static final Path OUTPUT = Path.of("target", "generated-docs", "user-guide", "index.html");
-    private static final Pattern STYLE_PATTERN = Pattern.compile("(?s)<style>\\s*(.*?)\\s*</style>");
-    private static final Pattern SCRIPT_PATTERN = Pattern.compile("(?s)<script>\\s*(.*?)\\s*</script>");
 
     @Test
     void exportsPublishedUserGuideHtmlFromMarkdownSource() throws Exception {
-        String landingPage = Files.readString(LANDING_PAGE_SOURCE, StandardCharsets.UTF_8);
         String markdown = withoutDocumentTitle(Files.readString(USER_GUIDE_SOURCE, StandardCharsets.UTF_8));
 
         Parser parser = Parser.builder().build();
@@ -52,12 +46,7 @@ class UserGuideHtmlExportTest {
                 })
                 .build();
 
-        String html = renderGuidePage(
-                extract(landingPage, STYLE_PATTERN, "landing page styles"),
-                extract(landingPage, SCRIPT_PATTERN, "theme script"),
-                renderTableOfContents(headings),
-                renderer.render(document)
-        );
+        String html = renderGuidePage(renderTableOfContents(headings), renderer.render(document));
 
         Files.createDirectories(OUTPUT.getParent());
         Files.writeString(OUTPUT, html, StandardCharsets.UTF_8);
@@ -66,12 +55,13 @@ class UserGuideHtmlExportTest {
         assertThat(html)
                 .contains("<title>User Guide | Order Events Service</title>")
                 .contains("href=\"../\"")
+                .contains("href=\"../assets/site.css\"")
+                .contains("src=\"../assets/site.js\"")
                 .contains("href=\"../openapi/\"")
                 .contains("href=\"../jacoco/index.html\"")
                 .contains("id=\"local-development\"")
                 .contains("id=\"generated-documentation\"")
                 .contains("docker compose up --build")
-                .contains("localStorage")
                 .doesNotContain("href=\"docs/user-guide.md\"")
                 .doesNotContain("href=\"../docs/user-guide.md\"")
                 .doesNotContain("href=\"./user-guide.md\"");
@@ -79,12 +69,6 @@ class UserGuideHtmlExportTest {
 
     private static String withoutDocumentTitle(String markdown) {
         return markdown.replaceFirst("(?s)^#\\s+User Guide\\R+", "");
-    }
-
-    private static String extract(String html, Pattern pattern, String description) {
-        Matcher matcher = pattern.matcher(html);
-        assertThat(matcher.find()).as("Expected %s in src/site/index.html", description).isTrue();
-        return matcher.group(1);
     }
 
     private static List<GuideHeading> collectHeadings(Node document, Map<Node, String> headingIds) {
@@ -169,18 +153,17 @@ class UserGuideHtmlExportTest {
                 .replace("\"", "&quot;");
     }
 
-    private static String renderGuidePage(String landingStyles, String themeScript, String toc, String content) {
+    private static String renderGuidePage(String toc, String content) {
         return """
                 <!doctype html>
                 <html lang="en">
                 <head>
                   <meta charset="utf-8">
                   <meta name="viewport" content="width=device-width, initial-scale=1">
+                  <meta name="description" content="Local setup, API usage, generated documentation, and troubleshooting for the Order Events Service.">
                   <title>User Guide | Order Events Service</title>
-                  <style>
-                %s
-                %s
-                  </style>
+                  <link rel="stylesheet" href="../assets/site.css">
+                  <script src="../assets/site.js" defer></script>
                 </head>
                 <body>
                   <a class="skip-link" href="#main">Skip to content</a>
@@ -227,152 +210,9 @@ class UserGuideHtmlExportTest {
                   <footer>
                     <div>Generated from <code>docs/user-guide.md</code> by Maven under <code>target/generated-docs/user-guide</code>.</div>
                   </footer>
-
-                  <script>
-                %s
-                  </script>
                 </body>
                 </html>
-                """.formatted(landingStyles, guideStyles(), toc, content, themeScript);
-    }
-
-    private static String guideStyles() {
-        return """
-                    .guide-hero {
-                      padding-bottom: 2.5rem;
-                    }
-
-                    .guide-hero h1 {
-                      max-width: none;
-                    }
-
-                    .guide-section {
-                      padding-top: 0;
-                    }
-
-                    .guide-layout {
-                      display: grid;
-                      gap: 1rem;
-                    }
-
-                    .guide-toc,
-                    .guide-content {
-                      background: var(--panel);
-                      border: 1px solid var(--line);
-                      border-radius: var(--radius);
-                      padding: 1rem;
-                    }
-
-                    .guide-toc {
-                      align-self: start;
-                    }
-
-                    .guide-toc h2 {
-                      font-size: 1.1rem;
-                      margin-bottom: 0.75rem;
-                    }
-
-                    .guide-toc ol {
-                      list-style: none;
-                      margin: 0;
-                      padding: 0;
-                    }
-
-                    .guide-toc li + li {
-                      margin-top: 0.45rem;
-                    }
-
-                    .guide-toc .toc-level-3 {
-                      padding-left: 1rem;
-                    }
-
-                    .guide-toc a {
-                      color: var(--muted);
-                      font-weight: 700;
-                      text-decoration: none;
-                    }
-
-                    .guide-toc a:hover {
-                      color: var(--accent-strong);
-                      text-decoration: underline;
-                    }
-
-                    .guide-content {
-                      min-width: 0;
-                    }
-
-                    .guide-content h2,
-                    .guide-content h3 {
-                      scroll-margin-top: 1.5rem;
-                    }
-
-                    .guide-content h2 {
-                      font-size: clamp(1.35rem, 3vw, 1.8rem);
-                      margin: 2.5rem 0 0.75rem;
-                    }
-
-                    .guide-content h2:first-child {
-                      margin-top: 0;
-                    }
-
-                    .guide-content h3 {
-                      font-size: 1.05rem;
-                      margin: 1.6rem 0 0.45rem;
-                    }
-
-                    .guide-content p,
-                    .guide-content li {
-                      color: var(--muted);
-                      max-width: 72ch;
-                    }
-
-                    .guide-content p + p,
-                    .guide-content ul + p,
-                    .guide-content ol + p,
-                    .guide-content pre + p {
-                      margin-top: 0.85rem;
-                    }
-
-                    .guide-content ul,
-                    .guide-content ol {
-                      margin: 0.75rem 0 0;
-                      padding-left: 1.35rem;
-                    }
-
-                    .guide-content li + li {
-                      margin-top: 0.35rem;
-                    }
-
-                    .guide-content pre {
-                      margin: 0.85rem 0 0;
-                    }
-
-                    .guide-content pre code {
-                      background: transparent;
-                      border: 0;
-                      color: inherit;
-                      padding: 0;
-                    }
-
-                    .guide-content blockquote {
-                      border-left: 4px solid var(--accent);
-                      color: var(--muted);
-                      margin: 1rem 0 0;
-                      padding-left: 1rem;
-                    }
-
-                    @media (min-width: 900px) {
-                      .guide-layout {
-                        grid-template-columns: minmax(14rem, 0.32fr) minmax(0, 1fr);
-                        align-items: start;
-                      }
-
-                      .guide-toc {
-                        position: sticky;
-                        top: 1rem;
-                      }
-                    }
-                """;
+                """.formatted(toc, content);
     }
 
     private record GuideHeading(int level, String text, String id) {

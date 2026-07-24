@@ -47,6 +47,7 @@ class OpenApiExportTest {
         assertThat(openApiJson)
                 .contains("\"http://localhost:8080\"")
                 .contains("\"application/json\"")
+                .contains("\"application/problem+json\"")
                 .contains("\"/api/orders\"")
                 .contains("\"CreateOrderRequest\"")
                 .contains("\"OrderResponse\"");

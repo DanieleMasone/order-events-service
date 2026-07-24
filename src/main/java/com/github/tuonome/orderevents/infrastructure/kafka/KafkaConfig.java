@@ -15,7 +15,7 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.FixedBackOff;
 
 /**
- * Kafka listener configuration for manual failure handling, retry backoff, and dead-letter publishing.
+ * Kafka listener configuration for record-level offset handling, retry backoff, and dead-letter publishing.
  */
 @Configuration
 public class KafkaConfig {
@@ -33,6 +33,9 @@ public class KafkaConfig {
     ) {
         if (retryMaxAttempts < 1) {
             throw new IllegalArgumentException("Kafka retry max attempts must be at least 1");
+        }
+        if (retryBackoffMs < 0) {
+            throw new IllegalArgumentException("Kafka retry backoff must not be negative");
         }
         this.dltTopic = dltTopic;
         this.retryBackoffMs = retryBackoffMs;
