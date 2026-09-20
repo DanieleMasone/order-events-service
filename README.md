@@ -1,10 +1,7 @@
 # Order Events Service
 
 [![CI](https://github.com/DanieleMasone/order-events-service/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/DanieleMasone/order-events-service/actions/workflows/ci.yml)
-[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-documentation-222222?logo=githubpages)](https://danielemasone.github.io/order-events-service/)
-[![Java 21](https://img.shields.io/badge/Java-21-000000?logo=openjdk)](pom.xml)
-[![Spring Boot 3.4.5](https://img.shields.io/badge/Spring_Boot-3.4.5-6DB33F?logo=springboot)](pom.xml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/github/license/DanieleMasone/order-events-service)](LICENSE)
 
 Portfolio-grade, production-oriented Spring Boot service that creates orders, persists them in PostgreSQL, publishes `OrderCreatedEvent` records to Kafka, and consumes them idempotently. It demonstrates focused event-driven reliability patterns rather than a complete production platform.
 
