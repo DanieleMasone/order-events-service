@@ -2,7 +2,7 @@ package com.github.danielemasone.orderevents;
 
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class PostgresTestSupport {
 
     @Container
-    static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:16-alpine");
+    static final PostgreSQLContainer POSTGRES = new PostgreSQLContainer("postgres:16-alpine");
 
     @DynamicPropertySource
     static void postgresProperties(DynamicPropertyRegistry registry) {

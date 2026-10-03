@@ -30,7 +30,7 @@ The current design intentionally does not implement a transactional outbox. Trea
 - Flyway
 - MapStruct
 - springdoc-openapi
-- JUnit 5, Mockito, Spring Boot Test, Testcontainers
+- JUnit Jupiter, Mockito, Spring Boot Test, Testcontainers
 - JaCoCo
 - Docker and Docker Compose
 - GitHub Actions and GitHub Pages
@@ -220,6 +220,10 @@ Do not commit offsets before successful processing. Listener acknowledgment mode
 
 - Read the existing code before changing architecture.
 - Keep Maven as the only build tool.
+- Let the Spring Boot parent manage compatible dependencies and plugins; avoid redundant version overrides.
+- Tomcat and Jackson BOM patch overrides address upstream security advisories beyond the parent baseline; reassess them with parent updates.
+- Kafka JSON uses Jackson 3 serializers; preserve the existing event JSON contract and header-free type configuration.
+- Dependency maintenance is manual. Do not add update bots, scheduled audits, or permanent version-update plugins.
 - Keep generated output under `target`.
 - Update README and the landing page when documentation links or generated artifact paths change.
 - Update `docs/user-guide.md` when operational commands, runtime endpoints, or generated documentation paths change.
