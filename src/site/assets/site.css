@@ -438,6 +438,7 @@ footer div {
 
 .guide-content {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .guide-content h2,
