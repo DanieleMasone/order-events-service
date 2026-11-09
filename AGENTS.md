@@ -244,3 +244,13 @@ Do not commit offsets before successful processing. Listener acknowledgment mode
 - frontend frameworks
 - generated artifacts outside `target`
 - committed build outputs or IDE files
+
+## Versioned Tooling
+
+Use Maven 3.10.0 through the Maven Wrapper
+(`mvnw` / `mvnw.cmd`) with the `only-script` distribution.
+
+Keep `.mvn/wrapper/maven-wrapper.properties` versioned.
+Do not commit `maven-wrapper.jar`.
+
+Use `./mvnw clean verify` as the standard verification command.
